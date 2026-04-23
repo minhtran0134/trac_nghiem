@@ -43,18 +43,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <body>
 <div class="app">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
-    <div style="font-weight:700; color:var(--accent)">QUIZ APP</div>
+    <div style="font-weight:700; color:var(--accent); font-family:'Syne'">QUIZ SYSTEM</div>
     <button class="btn" onclick="toggleTheme()" id="theme-btn">🌙 Chế độ tối</button>
   </div>
 
   <div id="screen-home" class="screen active">
     <div class="card">
       <div class="display">Luật Đấu Thầu 2023</div>
-      <p style="color:var(--text2); margin-top:8px">Hệ thống đã nạp đầy đủ 40 câu hỏi từ tài liệu của bạn.</p>
+      <p style="color:var(--text2); margin-top:8px">Ngân hàng câu hỏi trắc nghiệm ôn tập đầy đủ.</p>
       <div style="margin-top:20px; display:flex; gap:15px; font-size:13px">
-        <span>⏱ 90 Phút</span>
+        <span>⏱ 60 Phút</span>
         <span>📝 40 Câu hỏi</span>
-        <span>🎯 Vượt qua: 80%</span>
       </div>
     </div>
     <button class="btn btn-primary" style="width:100%" onclick="startQuiz()">Bắt đầu làm bài</button>
@@ -64,14 +63,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center">
         <span id="q-meta" style="font-size:13px; color:var(--text2)"></span>
-        <span id="timer-text" style="font-weight:700; color:var(--accent)">90:00</span>
+        <span id="timer-text" style="font-weight:700; color:var(--accent)">60:00</span>
       </div>
       <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
       <div id="q-text" style="font-size:17px; font-weight:500; margin:1.5rem 0; min-height:60px"></div>
       <div id="options-wrap"></div>
       <div style="display:flex; gap:10px; margin-top:20px">
         <button class="btn" style="flex:1" onclick="navigate(-1)">Câu trước</button>
-        <button class="btn btn-primary" style="flex:1" onclick="navigate(1)">Câu tiếp theo</button>
+        <button class="btn btn-primary" style="flex:1" onclick="navigate(1)">Câu tiếp</button>
       </div>
       <div class="nav-dots" id="nav-dots"></div>
     </div>
@@ -80,7 +79,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
   <div id="screen-result" class="screen">
     <div class="card" style="text-align:center">
-      <div style="font-size:14px; color:var(--text2)">KẾT QUẢ CỦA BẠN</div>
+      <div style="font-size:14px; color:var(--text2)">KẾT QUẢ</div>
       <div class="display" id="res-pct" style="font-size:48px; margin:10px 0; color:var(--accent)">0%</div>
       <div id="res-stats" style="display:flex; justify-content:center; gap:20px; font-weight:500">
         <span style="color:var(--green)">Đúng: <span id="res-correct"></span></span>
@@ -140,7 +139,7 @@ const questions = [
 let userAnswers = new Array(questions.length).fill(null);
 let currentQ = 0;
 let timer;
-let timeLeft = 90 * 60;
+let timeLeft = 60 * 60; // Đã đổi thành 60 phút
 
 function toggleTheme() {
   const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -161,7 +160,7 @@ function startQuiz() {
 
 function renderQuestion() {
   const q = questions[currentQ];
-  document.getElementById('q-meta').innerText = `Câu hỏi ${currentQ + 1} / ${questions.length}`;
+  document.getElementById('q-meta').innerText = `Câu ${currentQ + 1} / ${questions.length}`;
   document.getElementById('q-text').innerText = q.text;
   document.getElementById('prog-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
   
@@ -185,7 +184,7 @@ function renderNav() {
 }
 
 function submitQuiz() {
-  if(!confirm("Bạn có chắc chắn muốn nộp bài?")) return;
+  if(!confirm("Bạn chắc chắn nộp bài?")) return;
   clearInterval(timer);
   let correct = 0;
   questions.forEach((q, i) => { if(userAnswers[i] === q.correct) correct++; });
@@ -201,8 +200,8 @@ function submitQuiz() {
       <div class="review-item" style="border-left-color: ${isCorrect?'var(--green)':'var(--red)'}">
         <div style="font-weight:600; font-size:14px; margin-bottom:8px">${i+1}. ${q.text}</div>
         <div style="font-size:13px">
-          <div style="color:var(--text2)">Bạn chọn: <span style="color:${isCorrect?'var(--green)':'var(--red)'}">${userAnswers[i]!==null ? LETTERS[userAnswers[i]] + '. ' + q.options[userAnswers[i]] : 'Chưa trả lời'}</span></div>
-          ${!isCorrect ? `<div style="color:var(--green); margin-top:4px">Đáp án đúng: ${LETTERS[q.correct]}. ${q.options[q.correct]}</div>` : ''}
+          <div>Bạn chọn: <span style="color:${isCorrect?'var(--green)':'var(--red)'}">${userAnswers[i]!==null ? LETTERS[userAnswers[i]] : 'Chưa trả lời'}</span></div>
+          ${!isCorrect ? `<div style="color:var(--green); margin-top:4px">Đáp án đúng: ${LETTERS[q.correct]}</div>` : ''}
         </div>
       </div>
     `;
