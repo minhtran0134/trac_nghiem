@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Ôn Tập Luật Đấu Thầu 2023</title>
+<title>Hệ Thống Ôn Thi Luật Đấu Thầu 2023</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -21,42 +21,44 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;transition:0.3s;}
-.app{max-width:680px;margin:0 auto;padding:1.5rem 1rem}
+.app{max-width:720px;margin:0 auto;padding:1.5rem 1rem}
 .screen{display:none}.screen.active{display:block}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
 .display{font-family:'Syne',sans-serif;font-size:24px;font-weight:700}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:0.2s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:0.2s}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.opt-btn{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;cursor:pointer;background:var(--bg3);transition:0.2s}
-.opt-btn:hover{border-color:var(--text3)}
+.opt-btn{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;cursor:pointer;background:var(--bg3)}
 .opt-btn.selected{border-color:var(--accent);background:var(--accent-glow)}
 .opt-circle{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700}
 .prog-bar{height:4px;background:var(--bg4);border-radius:2px;margin:1rem 0;overflow:hidden}
 .prog-fill{height:100%;background:var(--accent);transition:width 0.3s}
 .nav-dots{display:grid;grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));gap:6px;margin-top:1.5rem}
-.nav-dot{height:35px;border-radius:8px;border:1px solid var(--border);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg2)}
-.nav-dot.answered{background:var(--accent);color:#fff;border-color:var(--accent)}
-.nav-dot.current{border:2px solid var(--accent);color:var(--accent);font-weight:700}
+.nav-dot{height:35px;border-radius:8px;border:1px solid var(--border);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg2)}
+.nav-dot.answered{background:var(--accent);color:#fff}
+.nav-dot.current{border:2px solid var(--accent);color:var(--accent)}
 .review-item{padding:15px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);margin-bottom:12px;border-left:4px solid transparent}
+.status-msg {font-size: 20px; font-weight: 800; padding: 10px; border-radius: 8px; margin: 15px 0; text-transform: uppercase;}
 </style>
 </head>
 <body>
 <div class="app">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
     <div style="font-weight:700; color:var(--accent); font-family:'Syne'">QUIZ SYSTEM</div>
-    <button class="btn" onclick="toggleTheme()" id="theme-btn">🌙 Chế độ tối</button>
+    <button class="btn btn-sm" onclick="toggleTheme()" id="theme-btn">🌙 Chế độ tối</button>
   </div>
 
   <div id="screen-home" class="screen active">
     <div class="card">
-      <div class="display">Luật Đấu Thầu 2023</div>
-      <p style="color:var(--text2); margin-top:8px">Ngân hàng câu hỏi trắc nghiệm ôn tập đầy đủ.</p>
+      <div class="display">Ôn Tập Luật Đấu Thầu 2023</div>
+      <p style="color:var(--text2); margin-top:10px">Ngân hàng đề thi: <b>180 câu (Đã nạp đủ)</b>.</p>
+      <p style="color:var(--text2)">Hệ thống bốc ngẫu nhiên <b>70 câu</b> mỗi lượt làm bài.</p>
       <div style="margin-top:20px; display:flex; gap:15px; font-size:13px">
         <span>⏱ 60 Phút</span>
-        <span>📝 40 Câu hỏi</span>
+        <span>📝 70 Câu hỏi</span>
+        <span>✅ Đỗ: ≥ 50% câu đúng</span>
       </div>
     </div>
-    <button class="btn btn-primary" style="width:100%" onclick="startQuiz()">Bắt đầu làm bài</button>
+    <button class="btn btn-primary" style="width:100%" onclick="startNewQuiz()">Bắt đầu thi ngay</button>
   </div>
 
   <div id="screen-quiz" class="screen">
@@ -66,90 +68,241 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         <span id="timer-text" style="font-weight:700; color:var(--accent)">60:00</span>
       </div>
       <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
-      <div id="q-text" style="font-size:17px; font-weight:500; margin:1.5rem 0; min-height:60px"></div>
+      <div id="q-text" style="font-size:16px; font-weight:500; margin:1.2rem 0; min-height:50px"></div>
       <div id="options-wrap"></div>
-      <div style="display:flex; gap:10px; margin-top:20px">
-        <button class="btn" style="flex:1" onclick="navigate(-1)">Câu trước</button>
-        <button class="btn btn-primary" style="flex:1" onclick="navigate(1)">Câu tiếp</button>
+      <div style="display:flex; gap:10px; margin-top:15px">
+        <button class="btn" style="flex:1" onclick="navigate(-1)">Trước</button>
+        <button class="btn btn-primary" style="flex:1" onclick="navigate(1)">Sau</button>
       </div>
       <div class="nav-dots" id="nav-dots"></div>
     </div>
-    <button class="btn btn-primary" style="width:100%; background:var(--green); border-color:var(--green)" onclick="submitQuiz()">Nộp bài thi</button>
+    <button class="btn btn-primary" style="width:100%; background:var(--green); border-color:var(--green)" onclick="submitQuiz()">Nộp bài</button>
   </div>
 
   <div id="screen-result" class="screen">
     <div class="card" style="text-align:center">
-      <div style="font-size:14px; color:var(--text2)">KẾT QUẢ</div>
-      <div class="display" id="res-pct" style="font-size:48px; margin:10px 0; color:var(--accent)">0%</div>
-      <div id="res-stats" style="display:flex; justify-content:center; gap:20px; font-weight:500">
-        <span style="color:var(--green)">Đúng: <span id="res-correct"></span></span>
-        <span style="color:var(--red)">Sai: <span id="res-wrong"></span></span>
+      <div id="result-status" class="status-msg"></div>
+      <div class="display" id="res-pct" style="font-size:48px; color:var(--accent)">0%</div>
+      <div id="res-stats" style="font-weight:600; margin-top:10px">
+        Đúng: <span id="res-correct" style="color:var(--green)"></span> | 
+        Sai: <span id="res-wrong" style="color:var(--red)"></span>
       </div>
     </div>
     <div id="review-wrap"></div>
-    <button class="btn btn-primary" style="width:100%" onclick="location.reload()">Làm bài lại</button>
+    <button class="btn btn-primary" style="width:100%" onclick="location.reload()">Thoát / Làm lại</button>
   </div>
 </div>
 
 <script>
-const LETTERS = ['A', 'B', 'C', 'D'];
-const questions = [
-  { text: "Trong đấu thầu quốc tế, quy định về đồng tiền dự thầu như thế nào?", options: ["Hồ sơ mời thầu có thể quy định tối đa 03 loại tiền tệ, nếu có Đồng Việt Nam thì khi đánh giá hồ sơ phải quy đổi về Đồng Việt Nam", "Nhà thầu không được chào thầu bằng đồng tiền nước ngoài", "Chi phí trong nước và chi phí ở nước ngoài đều phải chào thầu bằng Đồng Việt Nam", "Nhà thầu chỉ được chào thầu bằng 01 loại tiền tệ bất kỳ"], correct: 0 },
-  { text: "Đơn vị sự nghiệp công lập tự bảo đảm một phần chi thường xuyên có thể tự quyết định lựa chọn nhà thầu trong trường hợp nào?", options: ["Lựa chọn nhà thầu khi không sử dụng vốn ngân sách nhà nước mà sử dụng nguồn thu hợp pháp của đơn vị", "Gói thầu của đơn vị sự nghiệp công lập sử dụng nguồn vốn vay, trừ vốn tín dụng đầu tư của nhà nước, vốn vay lại từ vốn ODA, vốn vay ưu đãi nước ngoài", "Lựa chọn nhà thầu Gói thầu thuộc dự án đầu tư sử dụng nguồn vốn ngân sách nhà nước", "Khi nhận tài trợ từ tổ chức quốc tế mà tổ chức đó yêu cầu không thực hiện theo Luật Đấu thầu"], correct: 0 },
-  { text: "Trong đấu thầu, quy định về ngôn ngữ sử dụng như thế nào?", options: ["Đấu thầu quốc tế chỉ sử dụng tiếng Anh, không được sử dụng tiếng Việt", "Nhà thầu, trong đấu thầu quốc tế bắt buộc phải sử dụng cả tiếng Việt và tiếng Anh khi tham dự thầu", "Đấu thầu trong nước sử dụng tiếng Anh, đấu thầu quốc tế sử dụng tiếng Việt", "Đấu thầu trong nước sử dụng tiếng Việt, đấu thầu quốc tế sử dụng tiếng Anh hoặc tiếng Việt và tiếng Anh"], correct: 3 },
-  { text: "Cơ quan, tổ chức, doanh nghiệp được tự quyết định lựa chọn nhà thầu phải bảo đảm?", options: ["Công khai, minh bạch, hiệu quả kinh tế và trách nhiệm giải trình", "Tiết kiệm, hiệu quả và trách nhiệm giải trình", "Công khai, minh bạch, hiệu quả và trách nhiệm giải trình", "Cạnh tranh, công bằng, minh bạch, hiệu quả kinh tế và trách nhiệm giải trình"], correct: 2 },
-  { text: "Dịch vụ phi tư vấn bao gồm nội dung nào?", options: ["Cung cấp thiết bị có bao gồm dịch vụ lắp đặt", "Logistics, bảo hiểm, quảng cáo, vệ sinh", "Khảo sát, thiết kế, lập báo cáo nghiên cứu khả thi", "Xây dựng phần mềm nội bộ"], correct: 1 },
-  { text: "Khi nhà thầu vi phạm quy định về đấu thầu, nhà thầu có thể phải chịu hình thức xử lý vi phạm gì?", options: ["Tất cả đáp án trên đều đúng", "Cấm tham dự thầu trong một khoảng thời gian tùy theo mức độ vi phạm", "Xử lý hình sự tùy thuộc vào mức độ vi phạm và hậu quả", "Xử phạt hành chính tương ứng với từng hành vi vi phạm"], correct: 0 },
-  { text: "Việc lựa chọn nhà thầu để ký kết hợp đồng dầu khí được thực hiện theo quy định của pháp luật nào?", options: ["Luật Đấu thầu", "Do người có thẩm quyền quyết định", "Luật Dầu khí", "Luật Doanh nghiệp"], correct: 2 },
-  { text: "Trách nhiệm của chủ đầu tư?", options: ["Tất cả đáp án trên đều đúng", "Ký kết hợp đồng với nhà thầu", "Phê duyệt kết quả lựa chọn nhà thầu", "Phê duyệt kế hoạch lựa chọn nhà thầu"], correct: 0 },
-  { text: "Hồ sơ mời thầu là gì?", options: ["Tài liệu dành riêng cho đấu thầu quốc tế", "Tài liệu sử dụng cho mua sắm trực tiếp, chỉ định thầu", "Tài liệu sử dụng cho đấu thầu rộng rãi, đấu thầu hạn chế, chào hàng cạnh tranh", "Tất cả các đáp án trên đều đúng"], correct: 2 },
-  { text: "Dịch vụ tư vấn bao gồm nội dung nào sau đây?", options: ["Khảo sát, lập thiết kế, tư vấn đấu thầu, kiểm toán", "Dịch vụ bảo hiểm, truyền thông, vệ sinh", "Dịch vụ bảo trì, bảo dưỡng thiết bị", "Dịch vụ cung cấp phần mềm thương mại"], correct: 0 },
-  { text: "Hành vi nào được xem là thông thầu?", options: ["Dàn xếp, thỏa thuận, ép buộc để một hoặc các bên chuẩn bị hồ sơ dự thầu hoặc rút hồ sơ dự thầu để một bên trúng thầu", "Cung cấp thông tin sai lệch trong hồ sơ dự thầu để giành lợi thế cạnh tranh", "Nhà thầu tư vấn giám sát đồng thời thực hiện tư vấn kiểm định đối với gói thầu do nhà thầu đó giám sát", "Cố tình khiếu nại, tố cáo, kiến nghị sai sự thật để cản trở hoạt động đấu thầu"], correct: 0 },
-  { text: "Hoạt động lựa chọn nhà thầu nào dưới đây thuộc đối tượng áp dụng của Luật Đấu thầu?", options: ["Gói thầu mua nguyên liệu, nhiên liệu để phục vụ cho hoạt động sản xuất kinh doanh của doanh nghiệp nhà nước", "Tất cả đáp án trên đều đúng", "Gói thầu mua sắm thiết bị văn phòng tại các cơ quan nhà nước", "Gói thầu thuộc dự án đầu tư của đơn vị sự nghiệp công lập tự bảo đảm chi thường xuyên"], correct: 1 },
-  { text: "Thành viên tổ chuyên gia hoặc tổ thẩm định phải có tối thiểu bao nhiêu năm công tác?", options: ["01 năm", "02 năm", "03 năm", "05 năm"], correct: 2 },
-  { text: "Trách nhiệm của người có thẩm quyền trong đấu thầu bao gồm?", options: ["Đình chỉ cuộc thầu và không công nhận kết quả", "Ký hợp đồng với nhà thầu", "Phê duyệt kế hoạch lựa chọn nhà thầu", "Quyết định xử lý tình huống"], correct: 2 },
-  { text: "Nhà thầu phụ đặc biệt là gì?", options: ["Nhà thầu phụ cùng ký kết hợp đồng với chủ đầu tư", "Nhà thầu phụ có thể thay thế nhà thầu chính", "Nhà thầu phụ thực hiện công việc quan trọng của gói thầu", "Nhà thầu đảm nhiệm phần công việc quan trọng trong liên danh"], correct: 2 },
-  { text: "Hồ sơ yêu cầu dùng cho hình thức nào?", options: ["Mua sắm trực tiếp", "Đấu thầu rộng rãi", "Đấu thầu hạn chế", "Chào hàng cạnh tranh"], correct: 0 },
-  { text: "Nhà thầu tham dự thầu phải độc lập về pháp lý và tài chính với bên nào?", options: ["Nhà thầu tư vấn lập, thẩm định hồ sơ mời thầu", "Nhà thầu tư vấn đánh giá hồ sơ dự thầu", "Cả A, B và D đều đúng", "Các nhà thầu khác cùng tham dự đấu thầu hạn chế"], correct: 2 },
-  { text: "Dự toán mua sắm là gì?", options: ["Tất cả các đáp án trên đều đúng", "Là dự toán các chi phí được chủ đầu tư phê duyệt mỗi năm", "Là dự kiến nguồn kinh phí để mua sắm trong phạm vi ngân sách hoặc nguồn hợp pháp", "Là nguồn vốn ngân sách nhà nước được cấp hàng năm"], correct: 2 },
-  { text: "Trách nhiệm của tổ chuyên gia?", options: ["Bảo mật thông tin, tài liệu liên quan", "Lập hồ sơ mời thầu, hồ sơ yêu cầu", "Đánh giá hồ sơ dự thầu, hồ sơ đề xuất", "Tất cả đáp án trên đều đúng"], correct: 3 },
-  { text: "Giá đề nghị trúng thầu là gì?", options: ["Giá dự thầu sau khi sửa lỗi, hiệu chỉnh sai lệch và giảm giá", "Giá của nhà thầu xếp hạng thứ nhất", "Giá ký hợp đồng", "Giá thấp nhất trong các hồ sơ"], correct: 0 },
-  { text: "Phương thức một giai đoạn một túi hồ sơ áp dụng cho hình thức nào?", options: ["Đấu thầu rộng rãi, đấu thầu hạn chế quy mô nhỏ", "Chào hàng cạnh tranh", "Mua sắm trực tiếp, chỉ định thầu", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Hợp đồng trọn gói áp dụng cho gói thầu nào?", options: ["Gói thầu xây lắp quy mô nhỏ", "Gói thầu cung cấp dịch vụ tư vấn đơn giản", "Gói thầu mua sắm hàng hóa thông dụng", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Thời gian chuẩn bị hồ sơ dự thầu tối thiểu đối với đấu thầu trong nước là bao nhiêu ngày?", options: ["10 ngày", "15 ngày", "20 ngày", "30 ngày"], correct: 1 },
-  { text: "Thời gian đánh giá hồ sơ dự thầu tối đa là bao nhiêu ngày?", options: ["25 ngày", "30 ngày", "45 ngày", "60 ngày"], correct: 2 },
-  { text: "Bảo đảm dự thầu không áp dụng cho hình thức nào?", options: ["Đấu thầu rộng rãi", "Đấu thầu hạn chế", "Chỉ định thầu", "Chào hàng cạnh tranh"], correct: 2 },
-  { text: "Giá trị bảo đảm dự thầu trong khoảng nào?", options: ["1% đến 1.5% giá gói thầu", "1% đến 3% giá gói thầu", "2% đến 5% giá gói thầu", "3% đến 10% giá gói thầu"], correct: 1 },
-  { text: "Trường hợp nào nhà thầu không được hoàn trả bảo đảm dự thầu?", options: ["Rút hồ sơ dự thầu sau thời điểm đóng thầu", "Vi phạm pháp luật về đấu thầu dẫn đến bị hủy thầu", "Không tiến hành đối chiếu tài liệu hoặc không ký hợp đồng", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Ưu đãi trong lựa chọn nhà thầu áp dụng cho đối tượng nào?", options: ["Hàng hóa có xuất xứ Việt Nam", "Nhà thầu là doanh nghiệp siêu nhỏ, doanh nghiệp nhỏ", "Nhà thầu có sử dụng nhiều lao động là nữ hoặc người khuyết tật", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Quy trình lựa chọn nhà thầu gồm mấy bước cơ bản?", options: ["4 bước", "5 bước", "6 bước", "7 bước"], correct: 2 },
-  { text: "Hồ sơ mời thầu được phát hành khi nào?", options: ["Sau khi phê duyệt kế hoạch lựa chọn nhà thầu", "Sau khi thông báo mời thầu", "Ngay sau khi có quyết định đầu tư", "Tất cả đều sai"], correct: 1 },
-  { text: "Bên mời thầu là đơn vị nào?", options: ["Chủ đầu tư", "Tổ chức chuyên môn được chủ đầu tư thuê", "Cơ quan phê duyệt dự án", "Cả A và B đều đúng"], correct: 3 },
-  { text: "Tiêu chuẩn đánh giá hồ sơ dự thầu bao gồm?", options: ["Đánh giá về năng lực, kinh nghiệm", "Đánh giá về kỹ thuật", "Đánh giá về giá hoặc tổng hợp", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Hình thức Chào hàng cạnh tranh áp dụng cho gói thầu có giá trị bao nhiêu?", options: ["Dưới 1 tỷ đồng", "Dưới 5 tỷ đồng", "Dưới 10 tỷ đồng", "Không quy định giá trị"], correct: 1 },
-  { text: "Mua sắm trực tiếp được áp dụng khi nào?", options: ["Nhà thầu đã trúng thầu trước đó trong vòng 12 tháng", "Gói thầu có nội dung tương tự", "Giá gói thầu không quá giá trong hợp đồng đã ký", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Chỉ định thầu được áp dụng trong trường hợp khẩn cấp nào?", options: ["Thiên tai, dịch bệnh", "Sự cố cần khắc phục ngay", "Gói thầu bí mật nhà nước", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Hình thức tự thực hiện áp dụng khi nào?", options: ["Chủ đầu tư có đủ năng lực thực hiện", "Gói thầu thuộc dự án do mình quản lý", "Đảm bảo hiệu quả hơn thuê nhà thầu ngoài", "Tất cả các đáp án trên"], correct: 3 },
-  { text: "Chủ đầu tư là?", options: ["Cơ quan, tổ chức sở hữu hoặc quản lý vốn để thực hiện dự án", "Cơ quan phê duyệt kế hoạch lựa chọn nhà thầu", "Cơ quan đình chỉ cuộc thầu", "Đơn vị quyết định đầu tư"], correct: 0 },
-  { text: "Hoạt động lựa chọn nhà thầu nào không bắt buộc áp dụng Luật Đấu thầu?", options: ["Gói thầu xây trụ sở DN nhà nước không dùng ngân sách", "Gói thầu dịch vụ công dùng ngân sách", "Gói thầu mua sắm dùng ngân sách", "Gói thầu dùng nguồn thu hợp pháp của đơn vị sự nghiệp tự bảo đảm một phần chi thường xuyên"], correct: 3 },
-  { text: "Nhà thầu phụ là gì?", options: ["Nhà thầu liên danh", "Tổ chức ký hợp đồng với nhà thầu chính để thực hiện một phần công việc", "Nhà thầu cung cấp vật tư", "Nhà thầu thực hiện trên 50% gói thầu"], correct: 1 },
-  { text: "Dự án đầu tư bao gồm nội dung nào sau đây?", options: ["Chương trình theo quy định", "Nhiệm vụ quy hoạch", "Dự án theo quy định", "Tất cả các phương án trên"], correct: 3 }
+// Tổng hợp 180 câu từ các nguồn tài liệu 
+const masterBank = [
+    // Bộ 40 câu [cite: 1-200]
+    { text: "Trong đấu thầu quốc tế, quy định về đồng tiền dự thầu như thế nào?", options: ["Hồ sơ mời thầu tối đa 03 loại tiền tệ, quy đổi về VND", "Không được chào bằng ngoại tệ", "Bắt buộc chào bằng VND", "Chỉ được chào 01 loại tiền bất kỳ"], correct: 0 },
+    { text: "Đơn vị sự nghiệp công lập tự bảo đảm một phần chi thường xuyên tự quyết định lựa chọn nhà thầu khi nào?", options: ["Sử dụng nguồn thu hợp pháp (không dùng ngân sách)", "Sử dụng vốn vay ODA", "Dùng ngân sách nhà nước", "Tổ chức tài trợ yêu cầu"], correct: 0 },
+    { text: "Trong đấu thầu, quy định về ngôn ngữ sử dụng như thế nào?", options: ["Chỉ tiếng Anh", "Bắt buộc cả Việt và Anh", "Trong nước dùng Anh, quốc tế dùng Việt", "Trong nước dùng Việt, quốc tế dùng Anh hoặc cả hai"], correct: 3 },
+    { text: "Cơ quan, tổ chức, doanh nghiệp được tự quyết định lựa chọn nhà thầu phải bảo đảm?", options: ["Công khai, minh bạch, hiệu quả kinh tế, giải trình", "Tiết kiệm, hiệu quả, giải trình", "Công khai, minh bạch, hiệu quả, giải trình", "Cạnh tranh, công bằng, minh bạch, hiệu quả, giải trình"], correct: 2 },
+    { text: "Dịch vụ phi tư vấn bao gồm nội dung nào?", options: ["Lắp đặt thiết bị", "Logistics, bảo hiểm, quảng cáo, vệ sinh", "Khảo sát, thiết kế", "Xây dựng phần mềm nội bộ"], correct: 1 },
+    { text: "Nhà thầu vi phạm quy định có thể chịu hình thức xử lý gì?", options: ["Tất cả đáp án trên đều đúng", "Cấm tham dự thầu", "Xử lý hình sự", "Xử phạt hành chính"], correct: 0 },
+    { text: "Việc lựa chọn nhà thầu để ký kết hợp đồng dầu khí được thực hiện theo quy định của pháp luật nào?", options: ["Luật Đấu thầu", "Người có thẩm quyền quyết định", "Luật Dầu khí", "Luật Doanh nghiệp"], correct: 2 },
+    { text: "Trách nhiệm của chủ đầu tư?", options: ["Tất cả đáp án trên đều đúng", "Ký kết hợp đồng", "Phê duyệt kết quả", "Phê duyệt kế hoạch"], correct: 0 },
+    { text: "Hồ sơ mời thầu là gì?", options: ["Tài liệu dành riêng cho đấu thầu quốc tế", "Mua sắm trực tiếp, chỉ định thầu", "Đấu thầu rộng rãi, hạn chế, chào hàng cạnh tranh", "Tất cả các đáp án trên đều đúng"], correct: 2 },
+    { text: "Dịch vụ tư vấn bao gồm nội dung nào sau đây?", options: ["Khảo sát, thiết kế, tư vấn đấu thầu, kiểm toán", "Bảo hiểm, truyền thông", "Bảo trì thiết bị", "Phần mềm thương mại"], correct: 0 },
+    { text: "Hành vi nào được xem là thông thầu?", options: ["Dàn xếp rút hồ sơ để bên khác trúng thầu", "Cung cấp thông tin sai lệch năng lực", "Tư vấn giám sát kiêm kiểm định", "Khiếu nại sai sự thật"], correct: 0 },
+    { text: "Hoạt động lựa chọn nhà thầu nào dưới đây thuộc đối tượng áp dụng của Luật Đấu thầu?", options: ["DNNN mua nhiên liệu SXKD", "Tất cả đáp án trên đều đúng", "Mua thiết bị văn phòng cơ quan nhà nước", "Dự án ĐVSN công lập tự bảo đảm chi thường xuyên"], correct: 1 },
+    { text: "Thành viên tổ chuyên gia hoặc tổ thẩm định phải có tối thiểu bao nhiêu năm công tác?", options: ["01 năm", "02 năm", "03 năm", "05 năm"], correct: 2 },
+    { text: "Trách nhiệm của người có thẩm quyền bao gồm?", options: ["Đình chỉ cuộc thầu", "Ký hợp đồng", "Phê duyệt kế hoạch lựa chọn nhà thầu", "Xử lý tình huống"], correct: 2 },
+    { text: "Nhà thầu phụ đặc biệt là gì?", options: ["Cùng ký hợp đồng với CĐT", "Thay thế nhà thầu chính", "Thực hiện công việc quan trọng của gói thầu", "Công việc quan trọng trong liên danh"], correct: 2 },
+    { text: "Hồ sơ yêu cầu dùng cho hình thức nào?", options: ["Mua sắm trực tiếp", "Đấu thầu rộng rãi", "Đấu thầu hạn chế", "Chào hàng cạnh tranh"], correct: 0 },
+    { text: "Nhà thầu phải độc lập về pháp lý và tài chính với bên nào?", options: ["Tư vấn lập HSMT", "Tư vấn đánh giá HSDT", "Cả A, B và D đều đúng", "Nhà thầu khác trong đấu thầu hạn chế"], correct: 2 },
+    { text: "Dự toán mua sắm là gì?", options: ["Tất cả đáp án trên", "Chi phí duyệt mỗi năm", "Dự kiến nguồn kinh phí trong ngân sách hoặc nguồn hợp pháp", "Nguồn vốn ngân sách cấp hàng năm"], correct: 2 },
+    { text: "Trách nhiệm của tổ chuyên gia?", options: ["Bảo mật thông tin", "Lập HSMT/HSYC", "Đánh giá HSDT/HSĐX", "Tất cả đáp án trên"], correct: 3 },
+    { text: "Giá đề nghị trúng thầu là gì?", options: ["Giá dự thầu sau sửa lỗi, hiệu chỉnh và giảm giá", "Giá nhà thầu hạng nhất", "Giá ký hợp đồng", "Giá thấp nhất"], correct: 0 },
+    { text: "ODA theo điều ước quốc tế áp dụng quy định nào?", options: ["Điều ước quốc tế/Thỏa thuận vay", "Luật Đầu tư VN", "CĐT quyết định", "Luật Đấu thầu VN"], correct: 0 },
+    { text: "Giá hợp đồng là gì?", options: ["Giá chào trong đơn dự thầu", "Giá trị ghi trong hợp đồng", "Giá sau sửa lỗi", "Giá thấp nhất"], correct: 1 },
+    { text: "DNNN dùng ngân sách nhà nước thực hiện theo?", options: ["Tự chọn một phần Luật", "Quy chế nội bộ", "Pháp luật về đấu thầu", "Tự quyết định"], correct: 2 },
+    { text: "Giá dự thầu là gì?", options: ["Giá sau sửa lỗi", "Giá chào trong đơn dự thầu (bao gồm chi phí)", "Giá hạng nhất", "Giá trị hợp đồng"], correct: 1 },
+    { text: "Đấu thầu trong nước là gì?", options: ["Chỉ thầu nước ngoài", "Cả trong và ngoài", "Phải liên danh nước ngoài", "Chỉ thầu trong nước"], correct: 3 },
+    { text: "Đối tượng nào hưởng ưu đãi?", options: ["Hàng hóa xuất xứ VN", "Sản phẩm thân thiện môi trường", "Tất cả đáp án trên", "DN siêu nhỏ, nhỏ"], correct: 2 },
+    { text: "Trách nhiệm của nhà thầu?", options: ["Hội nghị tiền đấu thầu", "Gửi tài liệu trước đóng thầu", "Thực hiện theo hợp đồng đã ký", "Thông báo HSMT chưa đúng"], correct: 2 },
+    { text: "Người có thẩm quyền là?", options: ["Người quyết định đầu tư", "Người phê duyệt kế hoạch tổng thể", "Tất cả đáp án trên", "Người đứng đầu cơ quan cấp trên CĐT"], correct: 2 },
+    { text: "Khi nào tư vấn được thành lập tổ chuyên gia?", options: ["Không được quyền", "CĐT cho phép", "Thuê đánh giá HSDT và lập HSMT", "Làm bên mời thầu"], correct: 2 },
+    { text: "Trường hợp nào KHÔNG phải lý do hủy thầu?", options: ["Giá vượt giá gói thầu", "HSDT không đáp ứng HSMT", "Thay đổi mục tiêu mua sắm do bất khả kháng", "Thay đổi mục tiêu đầu tư"], correct: 0 },
+    { text: "Hiệu lực HSDT tính từ lúc nào?", options: ["Mở thầu", "Đóng thầu", "Nộp hồ sơ", "Phát hành HSMT"], correct: 1 },
+    { text: "Yêu cầu với tư vấn giám sát và tư vấn kiểm định?", options: ["Được liên kết", "Cùng một tổ chức", "Phải độc lập lý và tài chính", "Hợp đồng ràng buộc chung"], correct: 2 },
+    { text: "Đấu thầu quốc tế là gì?", options: ["Chỉ thầu nước ngoài", "Có thầu trong nước và nước ngoài", "Chỉ thầu trong nước", "Tổ chức ngoài VN"], correct: 1 },
+    { text: "Nhà thầu nước ngoài có tư cách hợp lệ khi nào?", options: ["Tất cả đáp án trên", "Đăng ký theo luật nước ngoài", "Không bị cấm thầu", "Liên danh thầu trong nước"], correct: 0 },
+    { text: "Thỏa thuận ODA không quy định chọn thầu thì theo?", options: ["Luật Đầu tư VN", "Luật Đấu thầu VN", "CĐT quyết định", "Tất cả sai"], correct: 1 },
+    { text: "Bảo đảm dự thầu dịch vụ tư vấn áp dụng khi?", options: ["Tất cả sai", "Chào hàng cạnh tranh", "Đấu thầu rộng rãi", "Đấu thầu hạn chế"], correct: 0 },
+    { text: "Chủ đầu tư là?", options: ["Sở hữu/Quản lý vốn dự án", "Phê duyệt kế hoạch tổng thể", "Đình chỉ cuộc thầu", "Quyết định đầu tư"], correct: 0 },
+    { text: "Gói thầu nào không bắt buộc áp dụng Luật Đấu thầu?", options: ["DNNN xây trụ sở không dùng ngân sách", "Dịch vụ công dùng ngân sách", "Mua sắm dùng ngân sách", "ĐVSN công lập tự bảo đảm dùng nguồn thu hợp pháp"], correct: 3 },
+    { text: "Nhà thầu phụ là gì?", options: ["Thầu liên danh", "Tổ chức ký hợp đồng với thầu chính tối đa 30%", "Tổ chức ký hợp đồng với thầu chính", "Ký hợp đồng với CĐT"], correct: 2 },
+    { text: "Dự án đầu tư bao gồm?", options: ["Chương trình theo luật", "Tất cả phương án trên", "Nhiệm vụ quy hoạch", "Dự án theo luật"], correct: 1 },
+
+    // Bộ 70 câu [cite: 201-550]
+    { text: "Điều nào không đúng khi thực hiện tùy chọn mua thêm?", options: ["Khối lượng không vượt 50% hợp đồng gốc", "Thầu trúng qua đấu thầu rộng rãi/đàm phán giá", "Có dự toán phê duyệt", "Đơn giá không vượt hợp đồng gốc"], correct: 0 },
+    { text: "CĐT công khai kết quả chọn thầu khi nào?", options: ["Bất kỳ lúc nào", "Tối đa 05 ngày", "Tối đa 05 ngày làm việc", "Không bắt buộc"], correct: 2 },
+    { text: "Mục đích hội nghị tiền đấu thầu?", options: ["Ký hợp đồng nguyên tắc", "Làm rõ HSMT", "Công bố dự án", "Thông báo kết quả"], correct: 1 },
+    { text: "Hàng hóa xuất xứ VN nếu HSMT không nêu thì?", options: ["Bị loại", "Chỉ đánh giá nếu giá thấp nhất", "Vẫn được xem xét, đánh giá", "CĐT tự quyết"], correct: 2 },
+    { text: "Biên bản mở thầu (không mạng) đăng tải trong bao lâu?", options: ["48 giờ", "24 giờ", "12 giờ", "72 giờ"], correct: 1 },
+    { text: "Tùy chọn mua thêm là gì?", options: ["Điều chỉnh đơn giá", "Nhà thầu tự ý cấp thêm", "CĐT mua bổ sung ngoài khối lượng hợp đồng", "Thay đổi nhà thầu"], correct: 2 },
+    { text: "Sửa đổi hợp đồng thực hiện khi nào?", options: ["Bất kỳ lúc nào", "Trong thời gian còn hiệu lực", "Trước khi có hiệu lực", "Sau khi hoàn thành"], correct: 1 },
+    { text: "Tại lúc ký hợp đồng, HSDT phải?", options: ["CĐT xác nhận lại", "Còn hiệu lực", "Cơ quan cấp trên xác nhận", "Bổ sung năng lực mới"], correct: 1 },
+    { text: "Thành viên tổ chuyên gia chịu trách nhiệm đánh giá trước?", options: ["Chủ đầu tư", "Đơn vị tư vấn", "Không chịu trách nhiệm", "Pháp luật"], correct: 3 },
+    { text: "Nhà thầu tham dự phải độc lập với bên nào?", options: ["Tất cả A, B, C đúng", "Các thầu khác (đấu thầu hạn chế)", "Tư vấn lập HSMT", "Tư vấn đánh giá HSDT"], correct: 0 },
+    { text: "File đính kèm E-HSDT không được đánh giá nếu?", options: ["Sai định dạng", "Nhiễm virus", "Đặt mật khẩu", "Tất cả đáp án trên đúng"], correct: 3 },
+    { text: "Mua sắm hàng hóa/xây lắp được bổ sung nhân sự chủ chốt khi nào?", options: ["Nhà thầu tự quyết", "CĐT tự quyết", "Nhân sự không đáp ứng/không chứng minh huy động được", "Không được bổ sung"], correct: 2 },
+    { text: "Kiến nghị nội dung HSMT, ai nộp đơn?", options: ["Nhà thầu đã nộp HSDT", "Tất cả đáp án trên đúng", "Cơ quan quan tâm", "Nhà thầu đã tải HSMT"], correct: 3 },
+    { text: "Thời gian tối thiểu thầu chào giá trực tuyến thông thường?", options: ["03 giờ", "04 giờ", "02 giờ", "01 giờ"], correct: 0 },
+    { text: "Nội dung HSMT bị coi là hạn chế cạnh tranh?", options: ["Yêu cầu năng lực tương tự", "Yêu cầu tài chính lành mạnh", "Yêu cầu xác nhận dự hội nghị tiền đấu thầu bắt buộc", "Yêu cầu kê khai nhân sự"], correct: 2 },
+    { text: "Nguyên tắc thanh toán hợp đồng xác định trên?", options: ["Điều khoản hợp đồng và thực tế", "Hóa đơn nhà cung cấp", "Dự toán ban đầu", "Định mức thầu tự đề xuất"], correct: 0 },
+    { text: "Mua sắm tập trung, trúng nhiều phần thầu phải nộp?", options: ["Đề xuất phân chia thầu phụ", "Đơn xin gia hạn", "Cam kết tài chính", "Cam kết bảo đảm đủ năng lực thực hiện toàn bộ"], correct: 3 },
+    { text: "Đơn giá thầu hạng nhất vượt định mức, CĐT có thể?", options: ["Hủy thầu", "Loại ngay nhà thầu", "Mời đàm phán đơn giá", "Mời nhà thầu tiếp theo"], correct: 2 },
+    { text: "Dịch vụ phi tư vấn bao gồm?", options: ["Tư vấn thầu", "Logistics, bảo hiểm, vệ sinh", "Thiết kế, khảo sát", "Quản lý dự án"], correct: 1 },
+    { text: "Hợp đồng đơn giá cố định áp dụng khi?", options: ["Giá thay đổi linh hoạt", "Khối lượng và giá chưa rõ", "Khối lượng rõ và không đổi", "Công việc rõ nhưng thực tế khối lượng chưa chính xác"], correct: 3 },
+    { text: "CĐT giải quyết kiến nghị trong bao lâu?", options: ["07 ngày làm việc", "10 ngày", "05 ngày làm việc", "15 ngày"], correct: 2 },
+    { text: "Trong làm rõ HSMT, CĐT không được làm gì?", options: ["Đăng tải Hệ thống", "Giải thích nội dung chưa rõ", "Nêu tên nhà thầu yêu cầu làm rõ", "Cập nhật đóng thầu"], correct: 2 },
+    { text: "Cơ sở y tế công tự quyết mua sắm khi?", options: ["Mua thiết bị bán lẻ", "Mua thuốc bán lẻ nhà thuốc bệnh viện", "Mua vắc xin tiêm dịch vụ", "Tất cả đáp án trên đúng"], correct: 3 },
+    { text: "Dịch vụ tư vấn gồm?", options: ["Bảo hiểm", "Phần mềm thương mại", "Bảo trì thiết bị", "Khảo sát, thiết kế, kiểm toán"], correct: 3 },
+    { text: "Gói thuê máy chủ 5 năm, giá 5 tỷ, hợp đồng tương tự?", options: ["1,5 tỷ", "300 triệu", "2,5 tỷ", "2 tỷ"], correct: 2 },
+    { text: "Trách nhiệm tổ chuyên gia?", options: ["Lập HSMT", "Tất cả đúng", "Đánh giá HSDT", "Bảo mật tài liệu"], correct: 1 },
+    { text: "Nhiều thầu ngang nhau tốt nhất, ưu tiên?", options: ["Chào giá trực tuyến rút gọn", "Điểm kỹ thuật cao hơn", "DN nhỏ/vừa do phụ nữ làm chủ", "Khoảng cách gần hơn"], correct: 2 },
+    { text: "Tư vấn dùng thang 1.000, điểm uy tín nhà thầu?", options: ["Tối thiểu 100", "Tối thiểu 50", "100 điểm", "50 điểm"], correct: 1 },
+    { text: "Hành vi bị đánh giá về uy tín?", options: ["Dùng chuyên gia ngoại", "HSDT không đáp ứng", "Từ chối đối chiếu tài liệu/thương thảo", "Không cấp được chứng chỉ gốc"], correct: 2 },
+    { text: "Nhà thầu liên danh trúng thầu, ai ký hợp đồng?", options: ["Bất kỳ ai", "Đứng đầu liên danh", "Theo phân công thỏa thuận", "Đại diện hợp pháp các thành viên"], correct: 3 },
+    { text: "Điều kiện bắt buộc mua sắm trực tiếp?", options: ["Giá không quá 1 tỷ", "Thầu khác được mời trước", "CĐT tự chọn bất kỳ", "Thầu từng trúng thầu rộng rãi/hạn chế và ký hợp đồng"], correct: 3 },
+    { text: "Không hợp lệ về bảo đảm dự thầu nếu?", options: ["Thời gian ngắn hơn yêu cầu", "Giá trị vượt yêu cầu", "Tên thụ hưởng là CĐT", "Phát hành bởi ngân hàng thương mại"], correct: 0 },
+    { text: "Điều kiện thành viên tổ chuyên gia?", options: ["Bằng đại học", "Chứng chỉ đấu thầu còn hiệu lực", "Tất cả đúng", "03 năm kinh nghiệm liên quan"], correct: 2 },
+    { text: "Đấu thầu trong nước, thầu chào bằng tiền?", options: ["Chỉ VND", "Tối đa 03 loại", "Cả 3 đáp án trên", "VND hoặc USD"], correct: 0 },
+    { text: "Một giai đoạn một túi hồ sơ áp dụng cho?", options: ["Tư vấn thầu rộng rãi/hạn chế", "Tư vấn cá nhân", "Phi tư vấn, hàng hóa, xây lắp thầu rộng rãi/hạn chế", "Đàm phán giá biệt dược"], correct: 2 },
+    { text: "Thời gian chuẩn bị HSDT tư vấn đơn giản, cấp bách?", options: ["09 ngày", "18 ngày", "07 ngày làm việc", "07 ngày"], correct: 3 },
+    { text: "Uy tín nhà thầu tư vấn dùng để?", options: ["Loại nhà thầu", "Đánh giá năng lực, kinh nghiệm", "Đánh giá tư cách hợp lệ", "Đánh giá kỹ thuật"], correct: 3 },
+    { text: "Tiêu chuẩn kỹ thuật hàng hóa xây dựng theo?", options: ["Đạt/Không đạt hoặc chấm điểm", "Chấm điểm", "Đạt/Không đạt", "Người thẩm quyền quyết"], correct: 0 },
+    { text: "Hình thức áp dụng mua sắm tập trung?", options: ["Chỉ định thầu", "Tất cả đúng", "Chào hàng cạnh tranh", "Đấu thầu rộng rãi"], correct: 1 },
+    { text: "Điều chỉnh kế hoạch chọn thầu khi thay đổi giá thầu thực hiện lúc?", options: ["Sau kết quả chọn thầu", "Lúc đánh giá HSDT", "Trước khi ký hợp đồng", "Trước đóng thầu"], correct: 3 },
+    { text: "Chào hàng cạnh tranh KHÔNG áp dụng cho?", options: ["Dịch vụ bảo vệ 1 tỷ", "Tư vấn lập HSMT 300 triệu", "Đào tạo đấu thầu 200 triệu", "Máy tính văn phòng 4 tỷ"], correct: 1 },
+    { text: "Mua sắm trực tuyến, thầu xác nhận thông báo trong?", options: ["05 ngày làm việc", "03 ngày làm việc", "05 ngày", "03 ngày"], correct: 1 },
+    { text: "Đấu thầu rộng rãi có bắt buộc thẩm định HSMT?", options: ["Chỉ xây lắp trên 20 tỷ", "Không bắt buộc", "Bắt buộc mọi gói thầu", "Chỉ tư vấn"], correct: 2 },
+    { text: "Phương pháp kết hợp kỹ thuật và giá, thầu hạng nhất là?", options: ["Giá thấp nhất", "Điểm tổng hợp cao nhất", "Thời gian nhanh nhất", "Điểm kỹ thuật cao nhất"], correct: 1 },
+    { text: "Áp dụng chỉ định thầu khi?", options: ["Cần nhanh tiến độ", "Thuộc hạn mức", "Duy nhất một nhà sản xuất", "Tất cả đúng"], correct: 3 },
+    { text: "Dự toán thầu cao hơn giá kế hoạch làm vượt tổng mức đầu tư?", options: ["Điều chỉnh kế hoạch/hình thức chọn thầu", "Không cần chỉnh", "Chỉ chỉnh nội dung", "Xin ý kiến người thẩm quyền"], correct: 0 },
+    { text: "Giá dự thầu hợp đồng trọn gói phải?", options: ["Gồm phí quản lý CĐT", "Tất cả sai", "Gồm rủi ro và trượt giá trách nhiệm thầu", "Không tính trượt giá"], correct: 2 },
+    { text: "Không cần điều chỉnh kế hoạch nếu dự toán cao hơn giá kế hoạch khi?", options: ["Dự toán thấp hơn", "Thầu đề xuất giá cao hơn", "Tăng thêm không vượt tổng mức đầu tư", "Đã đóng thầu"], correct: 2 },
+    { text: "Văn bản giải quyết kiến nghị đăng tải Hệ thống trong?", options: ["05 ngày làm việc", "04 ngày làm việc", "07 ngày làm việc", "03 ngày làm việc"], correct: 3 },
+    { text: "Không cần tính ưu đãi khi?", options: ["Có từ 3 thầu", "Mọi thầu trúng sơ tuyển", "Không nộp bảo lãnh", "Mọi thầu được hưởng cùng mức ưu đãi"], correct: 3 },
+    { text: "File E-HSDT đặt mật khẩu thì CĐT phải?", options: ["Đề nghị làm rõ", "Chọn 1 trong các cách", "Yêu cầu cấp mật khẩu trong 01 giờ từ lúc thông báo", "Loại file"], correct: 2 },
+    { text: "Thương thảo được thay nhân sự chủ chốt khi?", options: ["Không được thay", "CĐT yêu cầu", "Nhân sự không còn làm việc tại thầu", "Đánh giá HSDT kéo dài"], correct: 3 },
+    { text: "Chào hàng cạnh tranh, HSMT phải thẩm định khi?", options: ["Thẩm quyền yêu cầu", "CĐT yêu cầu", "Gói đặc thù", "Luôn phải thẩm định"], correct: 3 },
+    { text: "Gói xây lắp 50 tỷ, sửa HSMT trước đóng thầu?", options: ["03 ngày", "03 ngày làm việc", "10 ngày", "Vào lúc đóng thầu"], correct: 2 },
+    { text: "Kết thúc hiệu lực bảo đảm thực hiện hợp đồng khi?", options: ["Hết đấu thầu", "CĐT đồng ý", "Hoàn thành nghĩa vụ hoặc chuyển sang bảo hành", "Hết hiệu lực hợp đồng"], correct: 2 },
+    { text: "Thỏa thuận khung trong MSTT là cơ sở để?", options: ["Đơn vị nhu cầu ký hợp đồng với thầu", "Hợp đồng chính thức", "Bản phân tích giá", "Cam kết tài chính"], correct: 0 },
+    { text: "Tổ chuyên gia lập loại hồ sơ nào?", options: ["Hợp đồng và thanh toán", "Nghiệm thu", "HSMT, HSYC, HSMQT, HSMSY", "HSDT"], correct: 2 },
+    { text: "Mua sắm tập trung áp dụng khi?", options: ["Số lượng lớn chủng loại tương tự nhiều đơn vị", "Duy nhất một thầu", "Không rõ nhu cầu", "Giá trị nhỏ lẻ"], correct: 0 },
+    { text: "Hợp đồng tỷ lệ % áp dụng cho?", options: ["Bảo hiểm công trình", "Xây lắp lớn", "Tư vấn thiết kế", "Cung cấp vật tư"], correct: 0 },
+    { text: "Đấu thầu rộng rãi có 1-2 thầu nộp, CĐT có thể?", options: ["Hủy thầu", "Phê duyệt lại hồ sơ", "Chỉ định thầu", "Gia hạn đóng thầu hoặc mở thầu ngay để đánh giá"], correct: 3 },
+    { text: "Thầu thực hiện bảo đảm hợp đồng khi?", options: ["Trước nộp HSDT", "Sau xong hợp đồng", "Sau bàn giao", "Trước hoặc cùng lúc hợp đồng có hiệu lực"], correct: 3 },
+    { text: "Thời gian tổ chức chọn thầu tính từ?", options: ["Duyệt kế hoạch", "Mở thầu", "Nhận HSDT", "Phát hành HSMT/HSYC"], correct: 3 },
+    { text: "CĐT không thương thảo đúng quy định?", options: ["Thầu được quyền từ chối và nhận lại bảo đảm", "Không nhận lại bảo đảm", "Được bồi thường chi phí", "Vẫn phải ký biên bản"], correct: 0 },
+    { text: "Thẩm quyền cấm thầu phạm vi Bộ/Địa phương?", options: ["Bộ trưởng/Chủ tịch Tỉnh", "HĐND Tỉnh", "Người có thẩm quyền", "Tất cả đúng"], correct: 0 },
+    { text: "Đóng thầu không thầu nào tham dự?", options: ["Gia hạn 3 ngày làm việc", "Tự chỉ định thầu", "Hủy TBMT để mời thầu lại", "Duyệt lại HSMT"], correct: 0 },
+    { text: "Mức bảo đảm thực hiện hợp đồng?", options: ["2-10% giá hợp đồng", "1-5%", "5-15%", "3-8%"], correct: 0 },
+    { text: "Hợp đồng tương tự không đáp ứng yêu cầu, CĐT sẽ?", options: ["Loại thầu", "Yêu cầu thầu bổ sung/thay thế hợp đồng tương tự", "Chỉnh yêu cầu HSMT", "Yêu cầu bổ sung 1 lần duy nhất"], correct: 1 },
+    { text: "Làm rõ E-HSMT qua đâu?", options: ["Hệ thống mạng đấu thầu quốc gia", "Email cá nhân", "Bưu điện", "Trực tiếp tại trụ sở"], correct: 0 },
+    { text: "Đấu thầu hạn chế áp dụng cho gói?", options: ["Nhiều thầu đăng ký", "Yêu cầu kỹ thuật cao/đặc thù", "Vật tư phổ thông", "Hàng tiêu dùng"], correct: 1 },
+
+    // Bộ bổ sung [cite: 751-1103]
+    { text: "Tài liệu giải quyết kiến nghị công khai trên Hệ thống gồm?", options: ["Nội dung kiến nghị", "Giải quyết của CĐT", "Giải quyết của thầm quyền", "Tất cả đúng"], correct: 3 },
+    { text: "Đánh giá năng lực hàng hóa, thầu đạt khi?", options: ["Đạt tất cả tiêu chuẩn trong HSMT", "Đáp ứng 1 tiêu chuẩn", "Đáp ứng 2/3", "Đáp ứng tiêu chuẩn quan trọng"], correct: 0 },
+    { text: "DN/ĐVSN được tự quyết định chọn thầu khi nào?", options: ["Đầu tư công cơ quan nhà nước", "Đầu tư công ĐVSN", "DNNN dùng ngân sách", "DNNN không dùng ngân sách/ĐVSN tự bảo đảm chi"], correct: 3 },
+    { text: "Sửa đổi E-HSMT phải đăng gì?", options: ["Quyết định kèm nội dung sửa", "E-HSMT đã sửa", "Báo cáo thẩm định", "Phương án A và B đúng"], correct: 3 },
+    { text: "Thuê tư vấn lập HSMT/đánh giá HSDT, tổ chuyên gia do ai thành lập?", options: ["Người thẩm quyền", "Chủ đầu tư", "Bên mời thầu", "Đơn vị tư vấn"], correct: 3 },
+    { text: "Việt Nam mở cửa đấu thầu chính phủ trong hiệp định nào?", options: ["CPTPP", "EVFTA", "CPTPP, EVFTA, UKVFTA", "Mọi hiệp định"], correct: 2 },
+    { text: "Nhiệm vụ KHÔNG thuộc người có thẩm quyền?", options: ["Phê duyệt kế hoạch lựa chọn nhà thầu", "Giải quyết kiến nghị", "Hủy thầu thay đổi mục tiêu", "Đình chỉ cuộc thầu"], correct: 0 },
+    { text: "Gói thầu nào là dịch vụ tư vấn?", options: ["Lắp đặt xử lý nước thải", "Lập nhiệm vụ quy hoạch vùng", "Quảng cáo VTV", "Mua phần mềm MISA"], correct: 1 },
+    { text: "Hợp đồng điện tử trong MSTT ký giữa?", options: ["Đơn vị MSTT và thầu", "Đơn vị nhu cầu và thầu", "Phương án A và B đúng", "Cả A, B sai"], correct: 2 },
+    { text: "Đấu thầu qua mạng, Hệ thống tự động đánh giá?", options: ["Bảo đảm dự thầu", "Liên danh", "Doanh thu bình quân 3 năm", "Tất cả đúng"], correct: 2 },
+    { text: "Kiến nghị kết quả thầu gửi đồng thời CĐT và bộ phận thường trực thì ai giải quyết?", options: ["Người thẩm quyền", "Chủ đầu tư", "Bộ phận thường trực", "Hội đồng giải quyết kiến nghị"], correct: 3 },
+    { text: "Xây lắp offline, HSDT tài chính thầu trượt kỹ thuật được trả lại khi?", options: ["Mời thương thảo", "Xong đánh giá kỹ thuật", "Hoàn bảo đảm thầu/đăng kết quả", "Ký hợp đồng"], correct: 2 },
+    { text: "Ai được gia hạn đóng thầu trên Hệ thống?", options: ["Người thẩm quyền", "Chủ đầu tư", "Tổ chuyên gia", "Tư vấn thầu"], correct: 1 },
+    { text: "Hạn mức chỉ định thầu dự toán mua sắm thường xuyên?", options: ["500 triệu đồng", "800 triệu", "01 tỷ", "300 triệu"], correct: 0 },
+    { text: "Luật Đấu thầu số 90/2025/QH15 hiệu lực từ?", options: ["01/07/2025", "04/08/2025", "08/08/2025", "Tất cả sai"], correct: 0 },
+    { text: "Đối tượng hưởng ưu đãi?", options: ["Hàng xuất xứ VN", "Thầu nội sản xuất hàng VN", "Dịch vụ xanh", "Tất cả đúng"], correct: 3 },
+    { text: "Khi nào thầu phải nộp lại E-HSDT?", options: ["Tổ chuyên gia thấy lỗi", "Hệ thống lỗi", "E-HSMT sửa đổi", "Tất cả đúng"], correct: 2 },
+    { text: "Kế hoạch chọn thầu đăng Hệ thống chậm nhất?", options: ["05 ngày làm việc từ khi ban hành", "07 ngày", "07 ngày làm việc", "10 ngày"], correct: 0 },
+    { text: "Kế hoạch chọn thầu bắt buộc đăng ở?", options: ["Hệ thống mạng đấu thầu quốc gia", "Báo Tài chính", "Web Bộ/Ngành", "Cả A và B"], correct: 0 },
+    { text: "Thầu rộng rãi chỉ 1 thầu nộp lúc đóng thầu (không sơ tuyển)?", options: ["Mở ngay để đánh giá", "Gia hạn 10 ngày", "Báo cáo thẩm quyền", "A và C đúng"], correct: 0 },
+    { text: "Kiến nghị quá trình chọn thầu (không phải HSMT) do ai nộp?", options: ["Cá nhân quan tâm", "Nhà thầu tham dự", "Cơ quan quan tâm", "B và C đúng"], correct: 1 },
+    { text: "Tư vấn tổ chức 500 triệu áp dụng hình thức nào?", options: ["Chỉ chỉ định thầu", "Chỉ định thầu hoặc Thầu rộng rãi", "Chào hàng cạnh tranh", "Cả 3 cái trên"], correct: 1 },
+    { text: "Gói chia phần có phần không thầu dự?", options: ["Tách ra làm gói riêng", "Hủy thầu", "Đàm phán với thầu phần khác", "B và C đúng"], correct: 0 },
+    { text: "Hủy thầu thực hiện trong lúc nào?", options: ["Đóng thầu đến kết quả", "Phát hành hồ sơ đến trước ký hợp đồng/thỏa thuận khung", "Đóng thầu đến ký hợp đồng", "Bất kỳ lúc nào"], correct: 1 },
+    { text: "Chào hàng cạnh tranh không yêu cầu năng lực thì đánh giá?", options: ["Thầu cam kết trong đơn dự thầu", "Thầu nộp tài liệu thì bắt buộc đánh giá", "Bắt buộc đánh giá", "A và B đúng"], correct: 0 },
+    { text: "Nội dung KHÔNG thuộc quản lý nhà nước về thầu?", options: ["Quản lý cơ sở dữ liệu", "Lập HSMT/HSYC", "Đào tạo đấu thầu", "Hợp tác quốc tế"], correct: 1 },
+    { text: "HSDT hàng hóa thầu rộng rãi không nêu cụ thể nhãn hiệu/xuất xứ?", options: ["CĐT yêu cầu làm rõ", "Tổ chuyên gia tự tra cataloge", "Không được xem xét, đánh giá", "Trúng thì bổ sung sau"], correct: 2 },
+    { text: "Nhà thầu hàng hóa phải độc lập với?", options: ["Tư vấn lập HSMT", "Thầu khác thầu rộng rãi", "Tư vấn lập kế hoạch tổng thể", "Tư vấn lập kế hoạch chọn thầu"], correct: 0 },
+    { text: "Tài khoản nghiệp vụ trên Hệ thống do?", options: ["Người dùng đăng ký", "Trung tâm mạng cấp", "Tài khoản tham gia tạo ra", "A và B đúng"], correct: 2 },
+    { text: "Đơn vị MSTT thực hiện chọn thầu dựa trên?", options: ["Nhiệm vụ được giao", "Hợp đồng với đơn vị nhu cầu", "Cả nhiệm vụ hoặc hợp đồng", "Không được chọn"], correct: 2 },
+    { text: "Mua sắm trực tiếp áp dụng cho gói?", options: ["Chỉ hàng hóa", "Chỉ xây lắp", "Chỉ phi tư vấn", "Hàng hóa và phi tư vấn"], correct: 0 },
+    { text: "Đánh giá nhân sự/thiết bị xây lắp thầu rộng rãi thực hiện với?", options: ["Mọi thầu dự", "Thầu hạng nhất", "Mọi thầu đạt kỹ thuật", "Không đánh giá"], correct: 1 },
+    { text: "Chào hàng cạnh tranh áp dụng cho?", options: ["Mọi gói hàng hóa dưới 10 tỷ", "Phi tư vấn đơn giản dưới 10 tỷ", "Tư vấn đơn giản dưới 5 tỷ", "Xây lắp dưới 15 tỷ"], correct: 1 },
+    { text: "Tổ chuyên gia không được sửa từ 'không đạt' sang 'đạt' nội dung nào?", options: ["Tư cách thầu, doanh thu", "Bảo đảm thầu, thuế", "Tất cả thầu offline", "Tư cách, lịch sử phạm quy, thuế, tài chính"], correct: 3 },
+    { text: "Độc lập EPC, EC, EP nhà thầu KHÔNG bắt buộc độc lập với?", options: ["Tư vấn thiết kế FEED", "Tư vấn nghiên cứu khả thi", "Tư vấn báo cáo kinh tế kỹ thuật", "Thầu khác cùng thầu rộng rãi"], correct: 3 },
+    { text: "Nhà thầu liên danh cần nhanh tiến độ (sửa hợp đồng)?", options: ["Tự thỏa thuận không báo CĐT", "Tự thỏa thuận báo CĐT", "Người thẩm quyền cho phép mới được sửa", "CĐT và thầu được thỏa thuận điều chỉnh công việc"], correct: 3 },
+    { text: "Nhân sự phi tư vấn yêu cầu khi nào?", options: ["Mọi lúc", "Gói lớn", "Đặc thù phức tạp", "Thầu yêu cầu"], correct: 2 },
+    { text: "Hàng hóa theo luật đấu thầu gồm?", options: ["Máy móc, vật tư, phụ tùng", "Thuốc, thiết bị y tế", "Cả A và B đúng", "Logistics, bảo hiểm"], correct: 2 },
+    { text: "Quy trình mua sắm trực tiếp KHÔNG có bước?", options: ["Thẩm định HSYC", "Đánh giá đề xuất", "Phát hành HSYC", "Phê duyệt kết quả"], correct: 0 },
+    { text: "Phát hành HSMT thực hiện khi nào?", options: ["Sau khi đăng TBMT thành công", "Trước TBMT", "3 ngày sau TBMT", "Đồng thời với TBMT"], correct: 3 },
+    { text: "Thầu nộp chi phí giải quyết kiến nghị cho?", options: ["Chủ tịch Hội đồng", "Bộ phận thường trực Hội đồng", "Chủ đầu tư", "Người thẩm quyền"], correct: 1 },
+    { text: "Mẹ thầu huy động con làm xây lắp thì đánh giá hợp đồng tương tự theo?", options: ["Chỉ Mẹ", "Khối lượng do từng bên đảm nhiệm", "Chỉ Con", "Tổng cả hai không phân biệt"], correct: 1 },
+    { text: "Nhà thầu kê khai gì trên Hệ thống?", options: ["Uy tín", "Vi phạm", "Năng lực, kinh nghiệm", "Cả 3 đúng"], correct: 2 },
+    { text: "Quy trình chào hàng cạnh tranh KHÔNG có bước?", options: ["Phê duyệt kết quả", "Công khai kết quả", "Thẩm định kết quả", "Ký hợp đồng"], correct: 2 },
+    { text: "HSMT hàng hóa yêu cầu bảo hành mà HSDT không có?", options: ["Loại thầu", "CĐT cho thầu làm rõ/bổ sung trong ít nhất 3 ngày làm việc", "Xin ý kiến thẩm quyền", "Đánh giá tiếp trúng thì bổ sung"], correct: 1 },
+    { text: "Đánh giá năng lực hàng hóa/xây lắp bằng phương pháp?", options: ["Đạt/Không đạt", "Chấm điểm", "Kết hợp cả hai", "Dựa trên kỹ thuật"], correct: 0 },
+    { text: "Ai giải quyết kiến nghị kết quả thầu?", options: ["CĐT, thẩm quyền", "CĐT, Hội đồng giải quyết kiến nghị", "Thẩm quyền, Hội đồng", "CĐT, tổ chuyên gia"], correct: 1 },
+    { text: "E-HSDT sau đóng thầu online?", options: ["Sửa được lỗi", "Tự làm rõ trên web", "Không rút được hồ sơ", "CĐT không được mở nếu chỉ có 1 thầu"], correct: 2 },
+    { text: "Cơ sở thanh toán hợp đồng?", options: ["Giá hợp đồng và điều khoản hợp đồng", "Dự toán gói thầu", "Dự toán và điều khoản", "Mọi dự toán"], correct: 0 },
+    { text: "Thầu hạng nhất hỗn hợp không thương thảo ký biên bản?", options: ["Mời thầu tiếp theo vào thương thảo", "Hủy thầu", "Chào lại giá", "Mời thầu tiếp theo vào hoàn thiện"], correct: 0 },
+    { text: "Ai đăng danh sách thầu vi phạm uy tín lên Hệ thống?", options: ["Tổ chuyên gia", "Bên mời thầu", "Chủ đầu tư", "Người thẩm quyền"], correct: 2 },
+    { text: "Đấu thầu nội khối là gì?", options: ["Chỉ thầu nội khối tham dự", "Trong CPTPP", "Trong EVFTA", "Đấu thầu nội địa"], correct: 0 },
+    { text: "Tiêu chuẩn KHÔNG bắt buộc thầu hàng hóa?", options: ["Hợp đồng tương tự", "Tài sản ròng", "Doanh thu", "Thuế"], correct: 0 },
+    { text: "Giá thầu thấp khác thường, bảo đảm thực hiện hợp đồng tối đa?", options: ["30% giá hợp đồng", "35%", "40%", "45%"], correct: 0 },
+    { text: "Hàng hóa cùng loại nhiều đơn vị cùng tỉnh nhu cầu?", options: ["Dựa thỏa thuận khung cũ", "Gộp lại 1 gói để 1 đơn vị hoặc đơn vị MSTT làm", "Sở Tài chính làm", "Báo thẩm quyền duyệt kế hoạch"], correct: 1 },
+    { text: "Công việc phải làm trên Hệ thống?", options: ["Lập E-HSMT", "Phê duyệt E-HSMT", "Phê duyệt kết quả", "Tất cả đúng"], correct: 3 },
+    { text: "Hành vi gian lận thầu cấm tham gia trong?", options: ["06 tháng - 1 năm", "2 năm", "1 - 2 năm", "3 - 5 năm"], correct: 3 },
+    { text: "Thầu rộng rãi online không ai nộp hồ sơ?", options: ["Hủy TBMT", "Chuyển offline", "Gia hạn 5 ngày cho gói nhỏ", "A và C đúng"], correct: 0 },
+    { text: "Mời chào giá trực tuyến mà thầu từ chối?", options: ["Trượt tài chính", "Khóa tài khoản 6 tháng", "Tiếp tục đánh giá dựa trên hồ sơ đã nộp", "A và B đúng"], correct: 2 },
+    { text: "KHÔNG thuộc đối tượng Luật Đấu thầu?", options: ["Thuốc bệnh viện công dùng ngân sách", "Đường dùng đầu tư công", "Trang thiết bị Văn phòng UBND dùng ngân sách", "Hộ kinh doanh mua phần mềm"], correct: 3 },
+    { text: "Kiểm tra đấu thầu theo hình thức?", options: ["Trực tiếp", "Văn bản", "Cả hai kết hợp", "Định kỳ hoặc đột xuất"], correct: 3 },
+    { text: "Thầm quyền phê duyệt kế hoạch tổng thể chọn thầu?", options: ["Người có thẩm quyền", "Chủ đầu tư", "Người chuẩn bị dự án", "Bên mời thầu"], correct: 0 },
+    { text: "Gói hàng hóa 2 năm theo nhu cầu, hợp đồng tương tự giá trị?", options: ["50% giá thầu", "70%", "50% giá trị chu kỳ 1 năm", "Ít nhất 50%"], correct: 2 },
+    { text: " HSMT hàng hóa bị coi là hạn chế cạnh tranh nếu yêu cầu?", options: ["Hợp đồng tương tự", "Thầu phải là chủ sở hữu thiết bị chào thầu", "Tài chính mạnh", "Xong nghĩa vụ thuế"], correct: 1 },
+    { text: "Hồ sơ hoàn công quyết toán lưu trữ theo?", options: ["Nội bộ thầu", "Giám sát", "Pháp luật lưu trữ", "Mọi đáp án sai"], correct: 2 },
+    { text: "Thay thầu vi phạm, phần còn lại chỉ định thầu giá tính bằng?", options: ["Giá hợp đồng trừ phần đã làm nghiệm thu", "Giá hợp đồng cập nhật trừ phần đã làm", "Giá phần còn lại cập nhật", "Giá hợp đồng trừ phần dự toán đã duyệt"], correct: 0 },
+    { text: "Sở y tế nhận tài trợ 5 tỷ mua thuốc, thầu theo?", options: ["Tự quyết nếu nhà tài trợ yêu cầu không theo Luật", "Phải theo Luật Đấu thầu", "Mọi lúc không theo Luật", "Hỏi ý kiến UBND"], correct: 0 },
+    { text: "Lệch thông tin hợp đồng tương tự giữa webform và file?", options: ["Loại thầu", "CĐT yêu cầu làm rõ trên Hệ thống", "Nộp bản giấy bổ sung", "Mọi đáp án sai"], correct: 1 },
+    { text: "Hội đồng giải quyết kiến nghị có văn bản trong?", options: ["25 ngày", "30 ngày", "35 ngày", "20 ngày"], correct: 1 },
+    { text: "Thành viên liên danh làm giả hồ sơ bị cấm?", options: ["3-5 năm (chỉ thành viên đó)", "1-3 năm (chỉ thành viên đó)", "3-5 năm (cả liên danh)", "1-3 năm (cả liên danh)"], correct: 0 }
 ];
 
-let userAnswers = new Array(questions.length).fill(null);
+const LETTERS = ['A', 'B', 'C', 'D'];
+let questions = [];
+let userAnswers = [];
 let currentQ = 0;
 let timer;
-let timeLeft = 60 * 60; // Đã đổi thành 60 phút
+let timeLeft = 60 * 60;
 
 function toggleTheme() {
   const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('theme-btn').innerText = t === 'light' ? '🌙 Chế độ tối' : '☀️ Chế độ sáng';
+  document.getElementById('theme-btn').innerText = t === 'light' ? '☀️ Chế độ sáng' : '🌙 Chế độ tối';
 }
 
-function startQuiz() {
+function startNewQuiz() {
+  questions = [...masterBank].sort(() => Math.random() - 0.5).slice(0, 70);
+  userAnswers = new Array(questions.length).fill(null);
+  currentQ = 0;
+  timeLeft = 60 * 60;
   showScreen('screen-quiz');
   renderQuestion();
+  clearInterval(timer);
   timer = setInterval(() => {
     timeLeft--;
     let m = Math.floor(timeLeft/60), s = timeLeft%60;
@@ -163,12 +316,11 @@ function renderQuestion() {
   document.getElementById('q-meta').innerText = `Câu ${currentQ + 1} / ${questions.length}`;
   document.getElementById('q-text').innerText = q.text;
   document.getElementById('prog-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
-  
   const wrap = document.getElementById('options-wrap');
   wrap.innerHTML = q.options.map((opt, i) => `
     <div class="opt-btn ${userAnswers[currentQ] === i ? 'selected' : ''}" onclick="selectAns(${i})">
       <div class="opt-circle">${LETTERS[i]}</div>
-      <div style="font-size:14.5px">${opt}</div>
+      <div style="font-size:14px">${opt}</div>
     </div>
   `).join('');
   renderNav();
@@ -176,7 +328,6 @@ function renderQuestion() {
 
 function selectAns(i) { userAnswers[currentQ] = i; renderQuestion(); }
 function navigate(d) { currentQ = Math.max(0, Math.min(questions.length-1, currentQ + d)); renderQuestion(); }
-
 function renderNav() {
   document.getElementById('nav-dots').innerHTML = questions.map((_, i) => `
     <div class="nav-dot ${i===currentQ?'current':''} ${userAnswers[i]!==null?'answered':''}" onclick="currentQ=${i};renderQuestion()">${i+1}</div>
@@ -184,24 +335,38 @@ function renderNav() {
 }
 
 function submitQuiz() {
-  if(!confirm("Bạn chắc chắn nộp bài?")) return;
+  if(!confirm("Bạn chắc chắn muốn nộp bài?")) return;
   clearInterval(timer);
-  let correct = 0;
-  questions.forEach((q, i) => { if(userAnswers[i] === q.correct) correct++; });
+  let score = 0;
+  questions.forEach((q, i) => { if(userAnswers[i] === q.correct) score++; });
+  const pct = Math.round((score/questions.length)*100);
   
-  const pct = Math.round((correct/questions.length)*100);
+  // Logic hiện Đỗ/Chưa đạt (≥ 50%)
+  const statusEl = document.getElementById('result-status');
+  if (pct >= 50) {
+    statusEl.innerText = "CHÚC MỪNG: BẠN ĐÃ ĐỖ!";
+    statusEl.style.color = "var(--green)";
+    statusEl.style.background = "var(--green-bg)";
+    statusEl.style.border = "1px solid var(--green)";
+  } else {
+    statusEl.innerText = "RẤT TIẾC: BẠN CHƯA ĐẠT";
+    statusEl.style.color = "var(--red)";
+    statusEl.style.background = "var(--red-bg)";
+    statusEl.style.border = "1px solid var(--red)";
+  }
+  
   document.getElementById('res-pct').innerText = pct + '%';
-  document.getElementById('res-correct').innerText = correct;
-  document.getElementById('res-wrong').innerText = questions.length - correct;
+  document.getElementById('res-correct').innerText = score;
+  document.getElementById('res-wrong').innerText = questions.length - score;
   
   document.getElementById('review-wrap').innerHTML = questions.map((q, i) => {
     const isCorrect = userAnswers[i] === q.correct;
     return `
       <div class="review-item" style="border-left-color: ${isCorrect?'var(--green)':'var(--red)'}">
-        <div style="font-weight:600; font-size:14px; margin-bottom:8px">${i+1}. ${q.text}</div>
-        <div style="font-size:13px">
-          <div>Bạn chọn: <span style="color:${isCorrect?'var(--green)':'var(--red)'}">${userAnswers[i]!==null ? LETTERS[userAnswers[i]] : 'Chưa trả lời'}</span></div>
-          ${!isCorrect ? `<div style="color:var(--green); margin-top:4px">Đáp án đúng: ${LETTERS[q.correct]}</div>` : ''}
+        <div style="font-weight:600; font-size:14px">${i+1}. ${q.text}</div>
+        <div style="font-size:13px; margin-top:5px">
+          Đáp án đúng: <b style="color:var(--green)">${LETTERS[q.correct]}</b> | 
+          Bạn chọn: <b style="color:${isCorrect?'var(--green)':'var(--red)'}">${userAnswers[i]!==null?LETTERS[userAnswers[i]]:'Chưa làm'}</b>
         </div>
       </div>
     `;
