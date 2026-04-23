@@ -96,7 +96,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 // Tổng hợp 390 câu từ các nguồn tài liệu 
 const masterBank = [
-    { id: 1, text: "Trường hợp nào sau đây bắt buộc phải lựa chọn nhà thầu theo quy định tại Luật Đấu thầu?", options: ["Gói thầu thuộc dự án sử dụng vốn ngân sách nhà nước của cơ quan nhà nước", "Lựa chọn nhà thầu của doanh nghiệp nhà nước không sử dụng vốn ngân sách nhà nước", "Lựa chọn nhà thầu của đơn vị sự nghiệp công lập tự bảo đảm chi thường xuyên không sử dụng ngân sách nhà nước", "Việc thuê, mua, thuê mua nhà, trụ sở, tài sản gắn liền với đất"], correct: 0 },
+  { id: 1, text: "Trường hợp nào sau đây bắt buộc phải lựa chọn nhà thầu theo quy định tại Luật Đấu thầu?", options: ["Gói thầu thuộc dự án sử dụng vốn ngân sách nhà nước của cơ quan nhà nước", "Lựa chọn nhà thầu của doanh nghiệp nhà nước không sử dụng vốn ngân sách nhà nước", "Lựa chọn nhà thầu của đơn vị sự nghiệp công lập tự bảo đảm chi thường xuyên không sử dụng ngân sách nhà nước", "Việc thuê, mua, thuê mua nhà, trụ sở, tài sản gắn liền với đất"], correct: 0 },
   { id: 2, text: "Chọn phương án đúng về phạm vi điều chỉnh của Luật Đấu thầu?", options: ["Quy định về quản lý nhà nước đối với hoạt động đấu thầu", "Quy định về thẩm quyền và trách nhiệm của các cơ quan, tổ chức, cá nhân", "Quy định về hoạt động lựa chọn nhà thầu thực hiện gói thầu, nhà đầu tư dự án", "Tất cả phương án trên đều đúng"], correct: 3 },
   { id: 3, text: "Trường hợp nào sau đây không thuộc đối tượng áp dụng của Luật Đấu thầu?", options: ["Gói thầu mua thuốc ngân sách bệnh viện công lập", "Gói thầu xây dựng đường giao thông sử dụng vốn đầu tư công", "Gói thầu trang thiết bị vốn nhà nước của Văn phòng UBND", "Hoạt động mua phần mềm của hộ kinh doanh cá thể"], correct: 3 },
   { id: 4, text: "Trong đấu thầu quốc tế, quy định về đồng tiền dự thầu như thế nào?", options: ["HSMT quy định tối đa 03 loại tiền tệ, có VNĐ thì quy đổi về VNĐ", "Nhà thầu không được chào thầu bằng đồng tiền nước ngoài", "Chi phí trong và ngoài nước đều chào thầu bằng VNĐ", "Nhà thầu chỉ được chào thầu bằng 01 loại tiền tệ bất kỳ"], correct: 0 },
@@ -488,8 +488,8 @@ const masterBank = [
   { id: 390, text: "Đối với gói thầu thuộc phạm vi điều chỉnh của Hiệp định EVFTA tổ chức đấu thầu quốc tế, có áp dụng ưu đãi đối với hàng hóa, nhà thầu nội khối, một trong các nguyên tắc ưu đãi là?", options: ["Sau khi tính ưu đãi, nếu các hồ sơ dự thầu xếp hạng ngang nhau thì ưu tiên cho nhà thầu sử dụng nhiều lao động nội khối hơn (tính trên giá trị tiền lương, tiền công chi trả)", "Sau khi tính ưu đãi, nếu các hồ sơ dự thầu xếp hạng ngang nhau thì ưu tiên cho nhà thầu có đề xuất chi phí nội khối thấp hơn.", "Chủ đầu tư tự quyết định nhà thầu trúng thầu", "Không áp dụng ưu đãi"], correct: 0 }
 ];
 const LETTERS = ['A', 'B', 'C', 'D'];
-let questions = [];
-let userAnswers = [];
+let questions = []; 
+let userAnswers = []; 
 let currentQ = 0;
 let timer;
 let timeLeft = 60 * 60;
@@ -497,38 +497,46 @@ let timeLeft = 60 * 60;
 function toggleTheme() {
   const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', t);
-  const btn = document.getElementById('theme-btn');
-  if(btn) btn.innerText = t === 'light' ? '☀️ Sáng' : '🌙 Tối';
+  document.getElementById('theme-btn').innerText = t === 'light' ? '☀️ Sáng' : '🌙 Tối';
 }
 
-function getSeenIds() { 
-    try { return JSON.parse(localStorage.getItem('quiz_seen_all') || '[]'); } 
-    catch(e) { return []; } 
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
-function saveSeenIds(ids) { localStorage.setItem('quiz_seen_all', JSON.stringify(ids)); }
 
 function startNewQuiz() {
-  if (masterBank.length === 0) {
-    alert("Lỗi: Kho đề chưa có dữ liệu!");
-    return;
-  }
-  const seenIds = getSeenIds();
+  if (masterBank.length === 0) return alert("Kho đề trống!");
+  
+  // Thuật toán bốc 70 câu ngầm
+  let seenIds = JSON.parse(localStorage.getItem('quiz_seen_all') || '[]');
   let unseen = masterBank.filter(q => !seenIds.includes(q.id));
-  if (unseen.length < 10) { saveSeenIds([]); unseen = [...masterBank]; }
+  if (unseen.length < 10) { seenIds = []; unseen = [...masterBank]; }
 
-  let pool = [...unseen].sort(() => Math.random() - 0.5);
-  questions = pool.slice(0, 70);
-  if (questions.length < 70) {
-    let extras = masterBank.filter(q => !questions.find(curr => curr.id === q.id)).sort(() => Math.random() - 0.5);
-    questions = questions.concat(extras.slice(0, 70 - questions.length));
+  let selectedRaw = shuffle([...unseen]).slice(0, 70);
+  if (selectedRaw.length < 70) {
+    let extra = shuffle(masterBank.filter(q => !selectedRaw.find(x => x.id === q.id))).slice(0, 70 - selectedRaw.length);
+    selectedRaw = selectedRaw.concat(extra);
   }
-  saveSeenIds([...new Set([...seenIds, ...questions.map(q => q.id)])]);
+
+  // Cập nhật câu hỏi và ĐẢO ĐÁP ÁN
+  questions = selectedRaw.map(q => {
+    const correctText = q.options[q.correct];
+    const shuffledOpts = shuffle([...q.options]);
+    return { ...q, options: shuffledOpts, correct: shuffledOpts.indexOf(correctText) };
+  });
+
+  localStorage.setItem('quiz_seen_all', JSON.stringify([...new Set([...seenIds, ...questions.map(q => q.id)])]));
 
   userAnswers = new Array(70).fill(null);
   currentQ = 0; timeLeft = 60 * 60;
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-quiz').classList.add('active');
   renderQuestion();
+  
   if(timer) clearInterval(timer);
   timer = setInterval(() => {
     timeLeft--;
@@ -540,7 +548,7 @@ function startNewQuiz() {
 
 function renderQuestion() {
   const q = questions[currentQ];
-  document.getElementById('q-meta').innerText = `Câu ${currentQ + 1} / 70 (ID: ${q.id})`;
+  document.getElementById('q-meta').innerText = `Câu ${currentQ + 1} / 70 (ID Gốc: ${q.id})`;
   document.getElementById('q-text').innerText = q.text;
   document.getElementById('prog-fill').style.width = `${((currentQ+1)/70)*100}%`;
   document.getElementById('options-wrap').innerHTML = q.options.map((opt, i) => `
@@ -555,51 +563,32 @@ function selectAns(i) { userAnswers[currentQ] = i; renderQuestion(); }
 function navigate(d) { currentQ = Math.max(0, Math.min(69, currentQ + d)); renderQuestion(); }
 
 function submitQuiz() {
-  if(!confirm("Bạn có chắc chắn muốn nộp bài?")) return;
+  if(!confirm("Nộp bài?")) return;
   clearInterval(timer);
   let score = 0;
   questions.forEach((q, i) => { if(userAnswers[i] === q.correct) score++; });
   const pct = Math.round((score/70)*100);
-  
   const statusEl = document.getElementById('result-status');
   statusEl.innerText = pct >= 50 ? "ĐÃ ĐỖ" : "CHƯA ĐẠT";
   statusEl.style.color = pct >= 50 ? "var(--green)" : "var(--red)";
-  
   document.getElementById('res-pct').innerText = pct + '%';
   document.getElementById('res-correct').innerText = score;
   document.getElementById('res-wrong').innerText = 70 - score;
   
-  // HIỂN THỊ CHI TIẾT NỘI DUNG ĐÁP ÁN
   document.getElementById('review-wrap').innerHTML = questions.map((q, i) => {
     const isCorrect = userAnswers[i] === q.correct;
-    const userSelectedContent = userAnswers[i] !== null ? `${LETTERS[userAnswers[i]]}. ${q.options[userAnswers[i]]}` : "Bỏ trống";
-    const correctContent = `${LETTERS[q.correct]}. ${q.options[q.correct]}`;
-    
     return `
-      <div class="review-item" style="border-left: 4px solid ${isCorrect?'var(--green)':'var(--red)'}; padding: 15px; margin-bottom: 10px; background: var(--bg3); border-radius: 8px;">
-        <div style="font-weight:600; margin-bottom: 8px;">Câu ${i+1}: ${q.text}</div>
-        <div style="font-size:13px; line-height: 1.5;">
-          <div style="color: ${isCorrect ? 'var(--green)' : 'var(--red)'}; margin-bottom: 4px;">
-            <b>Bạn chọn:</b> ${userSelectedContent}
-          </div>
-          ${!isCorrect ? `
-          <div style="color: var(--green); font-weight: 500;">
-            <b>Đáp án đúng:</b> ${correctContent}
-          </div>` : ''}
+      <div class="review-item" style="border-left-color: ${isCorrect?'var(--green)':'var(--red)'}">
+        <div style="font-weight:600">${i+1}. ${q.text}</div>
+        <div style="font-size:13px; margin-top:5px">
+          <b style="color:${isCorrect?'var(--green)':'var(--red)'}">Bạn chọn:</b> ${userAnswers[i]!==null ? q.options[userAnswers[i]] : 'Bỏ trống'}<br>
+          <b style="color:var(--green)">Đáp án đúng:</b> ${q.options[q.correct]}
         </div>
       </div>`;
   }).join('');
-  
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-result').classList.add('active');
 }
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-window.onload = () => { if(document.getElementById('total-q-label')) document.getElementById('total-q-label').innerText = masterBank.length; };
 </script>
 </body>
 </html>
