@@ -497,17 +497,39 @@ let timeLeft = 60 * 60;
 function toggleTheme() {
   const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('theme-btn').innerText = t === 'light' ? '☀️ Chế độ sáng' : '🌙 Chế độ tối';
+  const btn = document.getElementById('theme-btn');
+  if(btn) btn.innerText = t === 'light' ? '☀️ Sáng' : '🌙 Tối';
 }
 
+function getSeenIds() { 
+    try { return JSON.parse(localStorage.getItem('quiz_seen_all') || '[]'); } 
+    catch(e) { return []; } 
+}
+function saveSeenIds(ids) { localStorage.setItem('quiz_seen_all', JSON.stringify(ids)); }
+
 function startNewQuiz() {
-  questions = [...masterBank].sort(() => Math.random() - 0.5).slice(0, 70);
-  userAnswers = new Array(questions.length).fill(null);
-  currentQ = 0;
-  timeLeft = 60 * 60;
-  showScreen('screen-quiz');
+  if (masterBank.length === 0) {
+    alert("Lỗi: Kho đề chưa có dữ liệu!");
+    return;
+  }
+  const seenIds = getSeenIds();
+  let unseen = masterBank.filter(q => !seenIds.includes(q.id));
+  if (unseen.length < 10) { saveSeenIds([]); unseen = [...masterBank]; }
+
+  let pool = [...unseen].sort(() => Math.random() - 0.5);
+  questions = pool.slice(0, 70);
+  if (questions.length < 70) {
+    let extras = masterBank.filter(q => !questions.find(curr => curr.id === q.id)).sort(() => Math.random() - 0.5);
+    questions = questions.concat(extras.slice(0, 70 - questions.length));
+  }
+  saveSeenIds([...new Set([...seenIds, ...questions.map(q => q.id)])]);
+
+  userAnswers = new Array(70).fill(null);
+  currentQ = 0; timeLeft = 60 * 60;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-quiz').classList.add('active');
   renderQuestion();
-  clearInterval(timer);
+  if(timer) clearInterval(timer);
   timer = setInterval(() => {
     timeLeft--;
     let m = Math.floor(timeLeft/60), s = timeLeft%60;
@@ -518,71 +540,66 @@ function startNewQuiz() {
 
 function renderQuestion() {
   const q = questions[currentQ];
-  document.getElementById('q-meta').innerText = `Câu ${currentQ + 1} / ${questions.length}`;
+  document.getElementById('q-meta').innerText = `Câu ${currentQ + 1} / 70 (ID: ${q.id})`;
   document.getElementById('q-text').innerText = q.text;
-  document.getElementById('prog-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
-  const wrap = document.getElementById('options-wrap');
-  wrap.innerHTML = q.options.map((opt, i) => `
+  document.getElementById('prog-fill').style.width = `${((currentQ+1)/70)*100}%`;
+  document.getElementById('options-wrap').innerHTML = q.options.map((opt, i) => `
     <div class="opt-btn ${userAnswers[currentQ] === i ? 'selected' : ''}" onclick="selectAns(${i})">
-      <div class="opt-circle">${LETTERS[i]}</div>
-      <div style="font-size:14px">${opt}</div>
-    </div>
-  `).join('');
-  renderNav();
+      <div class="opt-circle">${LETTERS[i]}</div><div style="font-size:14px">${opt}</div>
+    </div>`).join('');
+  document.getElementById('nav-dots').innerHTML = questions.map((_, i) => `
+    <div class="nav-dot ${i===currentQ?'current':''} ${userAnswers[i]!==null?'answered':''}" onclick="currentQ=${i};renderQuestion()">${i+1}</div>`).join('');
 }
 
 function selectAns(i) { userAnswers[currentQ] = i; renderQuestion(); }
-function navigate(d) { currentQ = Math.max(0, Math.min(questions.length-1, currentQ + d)); renderQuestion(); }
-function renderNav() {
-  document.getElementById('nav-dots').innerHTML = questions.map((_, i) => `
-    <div class="nav-dot ${i===currentQ?'current':''} ${userAnswers[i]!==null?'answered':''}" onclick="currentQ=${i};renderQuestion()">${i+1}</div>
-  `).join('');
-}
+function navigate(d) { currentQ = Math.max(0, Math.min(69, currentQ + d)); renderQuestion(); }
 
 function submitQuiz() {
-  if(!confirm("Bạn chắc chắn muốn nộp bài?")) return;
+  if(!confirm("Bạn có chắc chắn muốn nộp bài?")) return;
   clearInterval(timer);
   let score = 0;
   questions.forEach((q, i) => { if(userAnswers[i] === q.correct) score++; });
-  const pct = Math.round((score/questions.length)*100);
+  const pct = Math.round((score/70)*100);
   
-  // Logic hiện Đỗ/Chưa đạt (≥ 50%)
   const statusEl = document.getElementById('result-status');
-  if (pct >= 50) {
-    statusEl.innerText = "CHÚC MỪNG: BẠN ĐÃ ĐỖ!";
-    statusEl.style.color = "var(--green)";
-    statusEl.style.background = "var(--green-bg)";
-    statusEl.style.border = "1px solid var(--green)";
-  } else {
-    statusEl.innerText = "RẤT TIẾC: BẠN CHƯA ĐẠT";
-    statusEl.style.color = "var(--red)";
-    statusEl.style.background = "var(--red-bg)";
-    statusEl.style.border = "1px solid var(--red)";
-  }
+  statusEl.innerText = pct >= 50 ? "ĐÃ ĐỖ" : "CHƯA ĐẠT";
+  statusEl.style.color = pct >= 50 ? "var(--green)" : "var(--red)";
   
   document.getElementById('res-pct').innerText = pct + '%';
   document.getElementById('res-correct').innerText = score;
-  document.getElementById('res-wrong').innerText = questions.length - score;
+  document.getElementById('res-wrong').innerText = 70 - score;
   
+  // HIỂN THỊ CHI TIẾT NỘI DUNG ĐÁP ÁN
   document.getElementById('review-wrap').innerHTML = questions.map((q, i) => {
     const isCorrect = userAnswers[i] === q.correct;
+    const userSelectedContent = userAnswers[i] !== null ? `${LETTERS[userAnswers[i]]}. ${q.options[userAnswers[i]]}` : "Bỏ trống";
+    const correctContent = `${LETTERS[q.correct]}. ${q.options[q.correct]}`;
+    
     return `
-      <div class="review-item" style="border-left-color: ${isCorrect?'var(--green)':'var(--red)'}">
-        <div style="font-weight:600; font-size:14px">${i+1}. ${q.text}</div>
-        <div style="font-size:13px; margin-top:5px">
-          Đáp án đúng: <b style="color:var(--green)">${LETTERS[q.correct]}</b> | 
-          Bạn chọn: <b style="color:${isCorrect?'var(--green)':'var(--red)'}">${userAnswers[i]!==null?LETTERS[userAnswers[i]]:'Chưa làm'}</b>
+      <div class="review-item" style="border-left: 4px solid ${isCorrect?'var(--green)':'var(--red)'}; padding: 15px; margin-bottom: 10px; background: var(--bg3); border-radius: 8px;">
+        <div style="font-weight:600; margin-bottom: 8px;">Câu ${i+1}: ${q.text}</div>
+        <div style="font-size:13px; line-height: 1.5;">
+          <div style="color: ${isCorrect ? 'var(--green)' : 'var(--red)'}; margin-bottom: 4px;">
+            <b>Bạn chọn:</b> ${userSelectedContent}
+          </div>
+          ${!isCorrect ? `
+          <div style="color: var(--green); font-weight: 500;">
+            <b>Đáp án đúng:</b> ${correctContent}
+          </div>` : ''}
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
-  showScreen('screen-result');
+  
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-result').classList.add('active');
 }
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
+
+window.onload = () => { if(document.getElementById('total-q-label')) document.getElementById('total-q-label').innerText = masterBank.length; };
 </script>
 </body>
 </html>
