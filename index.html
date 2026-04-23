@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Quiz Builder Pro</title>
+<title>Ôn Tập Luật Đấu Thầu 2023</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -12,367 +12,208 @@
   --accent:#7c6fff; --accent2:#5b4ff0; --accent-glow:rgba(124,111,255,0.18);
   --green:#2dd98e; --green-bg:rgba(45,217,142,0.1);
   --red:#ff5f5f; --red-bg:rgba(255,95,95,0.1);
-  --amber:#f5a623; --amber-bg:rgba(245,166,35,0.1);
   --radius:14px; --radius-sm:10px;
 }
-/* LIGHT MODE COLORS */
 [data-theme="light"] {
   --bg:#f4f4f9; --bg2:#ffffff; --bg3:#f0f0f5; --bg4:#e8e8f0;
   --border:#d1d1d6; --border2:#c7c7cc; --text:#1c1c1e; --text2:#636366; --text3:#8e8e93;
   --accent:#5856d6; --accent2:#4544b3; --accent-glow:rgba(88,86,214,0.15);
 }
-
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;transition: background 0.3s, color 0.3s;}
-.app{max-width:660px;margin:0 auto;padding:1.5rem 1rem}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;transition:0.3s;}
+.app{max-width:680px;margin:0 auto;padding:1.5rem 1rem}
 .screen{display:none}.screen.active{display:block}
-
-/* CARDS */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;position:relative;overflow:hidden}
-.display{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
-.label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.muted{font-size:13px;color:var(--text2)}
-
-/* BADGE */
-.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:0.3px}
-.badge-purple{background:rgba(124,111,255,0.15);color:#a89fff;border:1px solid rgba(124,111,255,0.25)}
-
-/* INPUTS */
-.input{width:100%;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;margin-bottom:8px;transition:border 0.2s,box-shadow 0.2s}
-.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
-select.input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a5a68' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);transition:all 0.18s;font-family:'DM Sans',sans-serif;letter-spacing:0.1px}
-.btn:hover{background:var(--bg4);color:var(--text);border-color:var(--border2)}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 4px 20px rgba(124,111,255,0.25)}
-.btn-primary:hover{background:var(--accent2);box-shadow:0 4px 24px rgba(124,111,255,0.4)}
-.btn-danger{background:var(--red-bg);border-color:rgba(255,95,95,0.25);color:var(--red)}
-.btn-sm{padding:5px 11px;font-size:12px;border-radius:8px}
-
-/* TABS */
-.tabs{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:var(--radius-sm);margin-bottom:1.25rem}
-.tab{flex:1;padding:8px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);border-radius:8px;text-align:center;transition:all 0.18s}
-.tab.active{background:var(--bg4);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.3)}
-.tab-panel{display:none}.tab-panel.active{display:block}
-
-/* QUIZ UI */
-.q-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.1rem;margin-bottom:10px}
-.opt-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.opt-letter{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1.5px solid var(--border2);color:var(--text3);cursor:pointer}
-.opt-letter.correct{background:var(--accent);border-color:var(--accent);color:#fff}
-.opt-input{flex:1;padding:8px 11px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text)}
-
-.prog-bar{height:3px;background:var(--bg4);border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#a78bff);transition:width 0.35s}
-
-.opt-btn{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;background:var(--bg3)}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.display{font-family:'Syne',sans-serif;font-size:24px;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:0.2s}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt-btn{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;cursor:pointer;background:var(--bg3);transition:0.2s}
+.opt-btn:hover{border-color:var(--text3)}
 .opt-btn.selected{border-color:var(--accent);background:var(--accent-glow)}
-.opt-circle{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text3)}
-
-.nav-dots{display:flex;gap:5px;flex-wrap:wrap;margin-top:1rem}
-.nav-dot{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);background:var(--bg3)}
-.nav-dot.answered{background:var(--accent);border-color:var(--accent);color:#fff}
-.nav-dot.current{border-color:var(--accent);color:var(--accent)}
-
-.result-ring{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1.25rem;position:relative}
-.result-ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) var(--pct,0%), var(--bg4) 0%);padding:3px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.25rem}
-.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
-
-.review-item{padding:15px; border-radius: var(--radius-sm); background: var(--bg3); border: 1px solid var(--border); margin-bottom: 12px;}
-.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px}
-.glow-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);display:inline-block;margin-right:6px;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
-.row{display:flex;gap:8px}
-.flex1{flex:1}
-.divider{height:1px;background:var(--border);margin:1rem 0}
+.opt-circle{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700}
+.prog-bar{height:4px;background:var(--bg4);border-radius:2px;margin:1rem 0;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);transition:width 0.3s}
+.nav-dots{display:grid;grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));gap:6px;margin-top:1.5rem}
+.nav-dot{height:35px;border-radius:8px;border:1px solid var(--border);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--bg2)}
+.nav-dot.answered{background:var(--accent);color:#fff;border-color:var(--accent)}
+.nav-dot.current{border:2px solid var(--accent);color:var(--accent);font-weight:700}
+.review-item{padding:15px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);margin-bottom:12px;border-left:4px solid transparent}
 </style>
 </head>
 <body>
 <div class="app">
-
-  <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-    <button class="btn btn-sm" onclick="toggleTheme()" id="theme-btn">🌙 Chế độ tối</button>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px">
+    <div style="font-weight:700; color:var(--accent)">QUIZ APP</div>
+    <button class="btn" onclick="toggleTheme()" id="theme-btn">🌙 Chế độ tối</button>
   </div>
 
   <div id="screen-home" class="screen active">
     <div class="card">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem">
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span class="glow-dot"></span>
-            <span class="display">Quiz Builder</span>
-          </div>
-          <div class="muted">Tạo và làm bài trắc nghiệm</div>
-        </div>
-        <span class="badge badge-purple" id="q-count-badge">0 câu</span>
-      </div>
-
-      <div class="tabs">
-        <div class="tab active" onclick="switchTab('tab-create')">Câu hỏi</div>
-        <div class="tab" onclick="switchTab('tab-settings')">Cài đặt</div>
-      </div>
-
-      <div id="tab-create" class="tab-panel active">
-        <div id="q-list"></div>
-        <button class="btn" style="width:100%;margin-top:4px" onclick="addQuestion()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Thêm câu hỏi
-        </button>
-      </div>
-
-      <div id="tab-settings" class="tab-panel">
-        <div class="label">Tên bài thi</div>
-        <input class="input" id="quiz-name" placeholder="Ví dụ: Kiểm tra 15 phút" value="Bài kiểm tra của tôi"/>
-        <div class="row">
-          <div class="flex1">
-            <div class="label">Thời gian</div>
-            <select class="input" id="time-select">
-              <option value="0">Không giới hạn</option>
-              <option value="5">5 phút</option>
-              <option value="10" selected>10 phút</option>
-              <option value="15">15 phút</option>
-              <option value="30">30 phút</option>
-              <option value="45">45 phút</option>
-              <option value="60">60 phút</option>
-              <option value="90">90 phút</option>
-            </select>
-          </div>
-          <div class="flex1">
-            <div class="label">Xáo trộn</div>
-            <select class="input" id="shuffle-select">
-              <option value="no">Không</option>
-              <option value="yes">Ngẫu nhiên</option>
-            </select>
-          </div>
-        </div>
-        <div class="label">Thang điểm</div>
-        <select class="input" id="points-select">
-          <option value="1">1 điểm</option>
-          <option value="2">2 điểm</option>
-          <option value="5">5 điểm</option>
-          <option value="10" selected>10 điểm</option>
-        </select>
+      <div class="display">Luật Đấu Thầu 2023</div>
+      <p style="color:var(--text2); margin-top:8px">Hệ thống đã nạp đầy đủ 40 câu hỏi từ tài liệu của bạn.</p>
+      <div style="margin-top:20px; display:flex; gap:15px; font-size:13px">
+        <span>⏱ 90 Phút</span>
+        <span>📝 40 Câu hỏi</span>
+        <span>🎯 Vượt qua: 80%</span>
       </div>
     </div>
-
-    <button class="btn btn-primary" style="width:100%" onclick="startQuiz()">
-      Bắt đầu làm bài
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-    
-    <button class="btn" style="width:100%; margin-top: 10px; border-color: var(--accent); color: var(--accent); background: transparent;" onclick="shareQuiz()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:5px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-      Chia sẻ bài thi
-    </button>
+    <button class="btn btn-primary" style="width:100%" onclick="startQuiz()">Bắt đầu làm bài</button>
   </div>
 
   <div id="screen-quiz" class="screen">
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
-        <div class="display" id="q-title" style="font-size:15px"></div>
-        <div class="timer" id="timer-wrap" style="display:none; font-size:13px; font-weight:600; padding:5px 10px; background:var(--bg3); border-radius:8px;">
-          <span id="timer-text">10:00</span>
-        </div>
+      <div style="display:flex; justify-content:space-between; align-items:center">
+        <span id="q-meta" style="font-size:13px; color:var(--text2)"></span>
+        <span id="timer-text" style="font-weight:700; color:var(--accent)">90:00</span>
       </div>
-      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-      <div class="muted" style="margin-bottom:1rem;font-size:12px" id="q-meta"></div>
-      <div style="font-size:16px;font-weight:500;margin-bottom:1.25rem" id="q-text"></div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+      <div id="q-text" style="font-size:17px; font-weight:500; margin:1.5rem 0; min-height:60px"></div>
       <div id="options-wrap"></div>
-      <div style="display:flex;justify-content:space-between;margin-top:1.25rem">
-        <button class="btn" id="prev-btn" onclick="navigate(-1)">Trước</button>
-        <button class="btn btn-primary" id="next-btn" onclick="navigate(1)">Tiếp</button>
+      <div style="display:flex; gap:10px; margin-top:20px">
+        <button class="btn" style="flex:1" onclick="navigate(-1)">Câu trước</button>
+        <button class="btn btn-primary" style="flex:1" onclick="navigate(1)">Câu tiếp theo</button>
       </div>
-      <div class="divider"></div>
       <div class="nav-dots" id="nav-dots"></div>
     </div>
-    <div class="row">
-      <button class="btn flex1" onclick="confirmExit()">Thoát</button>
-      <button class="btn btn-primary flex1" onclick="submitQuiz()">Nộp bài</button>
-    </div>
+    <button class="btn btn-primary" style="width:100%; background:var(--green); border-color:var(--green)" onclick="submitQuiz()">Nộp bài thi</button>
   </div>
 
   <div id="screen-result" class="screen">
     <div class="card" style="text-align:center">
-      <div class="display" style="margin-bottom:1.5rem" id="res-name">Kết quả</div>
-      <div class="result-ring" id="res-ring">
-        <div class="result-inner"><div class="result-pct" id="res-pct">0%</div></div>
-      </div>
-      <div id="res-grade" style="font-size:18px;font-weight:600;margin-bottom:1rem"></div>
-      <div class="stat-grid">
-        <div class="stat-card"><div id="res-correct" style="font-size:20px; font-weight:700; color:var(--green)">0</div><div class="muted">Đúng</div></div>
-        <div class="stat-card"><div id="res-wrong" style="font-size:20px; font-weight:700; color:var(--red)">0</div><div class="muted">Sai</div></div>
-        <div class="stat-card"><div id="res-time" style="font-size:20px; font-weight:700; color:var(--accent)">00:00</div><div class="muted">Thời gian</div></div>
+      <div style="font-size:14px; color:var(--text2)">KẾT QUẢ CỦA BẠN</div>
+      <div class="display" id="res-pct" style="font-size:48px; margin:10px 0; color:var(--accent)">0%</div>
+      <div id="res-stats" style="display:flex; justify-content:center; gap:20px; font-weight:500">
+        <span style="color:var(--green)">Đúng: <span id="res-correct"></span></span>
+        <span style="color:var(--red)">Sai: <span id="res-wrong"></span></span>
       </div>
     </div>
-    
-    <div class="label">Chi tiết bài làm</div>
     <div id="review-wrap"></div>
-
-    <div class="row" style="margin-top:1rem">
-      <button class="btn flex1" onclick="location.reload()">Trang chủ</button>
-      <button class="btn btn-primary flex1" onclick="retake()">Làm lại</button>
-    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="location.reload()">Làm bài lại</button>
   </div>
-
 </div>
 
 <script>
-const LETTERS=['A','B','C','D'];
-let questions=[],quizQuestions=[],userAnswers=[],currentQ=0;
-let timerInterval=null,timeLeft=0,startTime=null;
+const LETTERS = ['A', 'B', 'C', 'D'];
+const questions = [
+  { text: "Trong đấu thầu quốc tế, quy định về đồng tiền dự thầu như thế nào?", options: ["Hồ sơ mời thầu có thể quy định tối đa 03 loại tiền tệ, nếu có Đồng Việt Nam thì khi đánh giá hồ sơ phải quy đổi về Đồng Việt Nam", "Nhà thầu không được chào thầu bằng đồng tiền nước ngoài", "Chi phí trong nước và chi phí ở nước ngoài đều phải chào thầu bằng Đồng Việt Nam", "Nhà thầu chỉ được chào thầu bằng 01 loại tiền tệ bất kỳ"], correct: 0 },
+  { text: "Đơn vị sự nghiệp công lập tự bảo đảm một phần chi thường xuyên có thể tự quyết định lựa chọn nhà thầu trong trường hợp nào?", options: ["Lựa chọn nhà thầu khi không sử dụng vốn ngân sách nhà nước mà sử dụng nguồn thu hợp pháp của đơn vị", "Gói thầu của đơn vị sự nghiệp công lập sử dụng nguồn vốn vay, trừ vốn tín dụng đầu tư của nhà nước, vốn vay lại từ vốn ODA, vốn vay ưu đãi nước ngoài", "Lựa chọn nhà thầu Gói thầu thuộc dự án đầu tư sử dụng nguồn vốn ngân sách nhà nước", "Khi nhận tài trợ từ tổ chức quốc tế mà tổ chức đó yêu cầu không thực hiện theo Luật Đấu thầu"], correct: 0 },
+  { text: "Trong đấu thầu, quy định về ngôn ngữ sử dụng như thế nào?", options: ["Đấu thầu quốc tế chỉ sử dụng tiếng Anh, không được sử dụng tiếng Việt", "Nhà thầu, trong đấu thầu quốc tế bắt buộc phải sử dụng cả tiếng Việt và tiếng Anh khi tham dự thầu", "Đấu thầu trong nước sử dụng tiếng Anh, đấu thầu quốc tế sử dụng tiếng Việt", "Đấu thầu trong nước sử dụng tiếng Việt, đấu thầu quốc tế sử dụng tiếng Anh hoặc tiếng Việt và tiếng Anh"], correct: 3 },
+  { text: "Cơ quan, tổ chức, doanh nghiệp được tự quyết định lựa chọn nhà thầu phải bảo đảm?", options: ["Công khai, minh bạch, hiệu quả kinh tế và trách nhiệm giải trình", "Tiết kiệm, hiệu quả và trách nhiệm giải trình", "Công khai, minh bạch, hiệu quả và trách nhiệm giải trình", "Cạnh tranh, công bằng, minh bạch, hiệu quả kinh tế và trách nhiệm giải trình"], correct: 2 },
+  { text: "Dịch vụ phi tư vấn bao gồm nội dung nào?", options: ["Cung cấp thiết bị có bao gồm dịch vụ lắp đặt", "Logistics, bảo hiểm, quảng cáo, vệ sinh", "Khảo sát, thiết kế, lập báo cáo nghiên cứu khả thi", "Xây dựng phần mềm nội bộ"], correct: 1 },
+  { text: "Khi nhà thầu vi phạm quy định về đấu thầu, nhà thầu có thể phải chịu hình thức xử lý vi phạm gì?", options: ["Tất cả đáp án trên đều đúng", "Cấm tham dự thầu trong một khoảng thời gian tùy theo mức độ vi phạm", "Xử lý hình sự tùy thuộc vào mức độ vi phạm và hậu quả", "Xử phạt hành chính tương ứng với từng hành vi vi phạm"], correct: 0 },
+  { text: "Việc lựa chọn nhà thầu để ký kết hợp đồng dầu khí được thực hiện theo quy định của pháp luật nào?", options: ["Luật Đấu thầu", "Do người có thẩm quyền quyết định", "Luật Dầu khí", "Luật Doanh nghiệp"], correct: 2 },
+  { text: "Trách nhiệm của chủ đầu tư?", options: ["Tất cả đáp án trên đều đúng", "Ký kết hợp đồng với nhà thầu", "Phê duyệt kết quả lựa chọn nhà thầu", "Phê duyệt kế hoạch lựa chọn nhà thầu"], correct: 0 },
+  { text: "Hồ sơ mời thầu là gì?", options: ["Tài liệu dành riêng cho đấu thầu quốc tế", "Tài liệu sử dụng cho mua sắm trực tiếp, chỉ định thầu", "Tài liệu sử dụng cho đấu thầu rộng rãi, đấu thầu hạn chế, chào hàng cạnh tranh", "Tất cả các đáp án trên đều đúng"], correct: 2 },
+  { text: "Dịch vụ tư vấn bao gồm nội dung nào sau đây?", options: ["Khảo sát, lập thiết kế, tư vấn đấu thầu, kiểm toán", "Dịch vụ bảo hiểm, truyền thông, vệ sinh", "Dịch vụ bảo trì, bảo dưỡng thiết bị", "Dịch vụ cung cấp phần mềm thương mại"], correct: 0 },
+  { text: "Hành vi nào được xem là thông thầu?", options: ["Dàn xếp, thỏa thuận, ép buộc để một hoặc các bên chuẩn bị hồ sơ dự thầu hoặc rút hồ sơ dự thầu để một bên trúng thầu", "Cung cấp thông tin sai lệch trong hồ sơ dự thầu để giành lợi thế cạnh tranh", "Nhà thầu tư vấn giám sát đồng thời thực hiện tư vấn kiểm định đối với gói thầu do nhà thầu đó giám sát", "Cố tình khiếu nại, tố cáo, kiến nghị sai sự thật để cản trở hoạt động đấu thầu"], correct: 0 },
+  { text: "Hoạt động lựa chọn nhà thầu nào dưới đây thuộc đối tượng áp dụng của Luật Đấu thầu?", options: ["Gói thầu mua nguyên liệu, nhiên liệu để phục vụ cho hoạt động sản xuất kinh doanh của doanh nghiệp nhà nước", "Tất cả đáp án trên đều đúng", "Gói thầu mua sắm thiết bị văn phòng tại các cơ quan nhà nước", "Gói thầu thuộc dự án đầu tư của đơn vị sự nghiệp công lập tự bảo đảm chi thường xuyên"], correct: 1 },
+  { text: "Thành viên tổ chuyên gia hoặc tổ thẩm định phải có tối thiểu bao nhiêu năm công tác?", options: ["01 năm", "02 năm", "03 năm", "05 năm"], correct: 2 },
+  { text: "Trách nhiệm của người có thẩm quyền trong đấu thầu bao gồm?", options: ["Đình chỉ cuộc thầu và không công nhận kết quả", "Ký hợp đồng với nhà thầu", "Phê duyệt kế hoạch lựa chọn nhà thầu", "Quyết định xử lý tình huống"], correct: 2 },
+  { text: "Nhà thầu phụ đặc biệt là gì?", options: ["Nhà thầu phụ cùng ký kết hợp đồng với chủ đầu tư", "Nhà thầu phụ có thể thay thế nhà thầu chính", "Nhà thầu phụ thực hiện công việc quan trọng của gói thầu", "Nhà thầu đảm nhiệm phần công việc quan trọng trong liên danh"], correct: 2 },
+  { text: "Hồ sơ yêu cầu dùng cho hình thức nào?", options: ["Mua sắm trực tiếp", "Đấu thầu rộng rãi", "Đấu thầu hạn chế", "Chào hàng cạnh tranh"], correct: 0 },
+  { text: "Nhà thầu tham dự thầu phải độc lập về pháp lý và tài chính với bên nào?", options: ["Nhà thầu tư vấn lập, thẩm định hồ sơ mời thầu", "Nhà thầu tư vấn đánh giá hồ sơ dự thầu", "Cả A, B và D đều đúng", "Các nhà thầu khác cùng tham dự đấu thầu hạn chế"], correct: 2 },
+  { text: "Dự toán mua sắm là gì?", options: ["Tất cả các đáp án trên đều đúng", "Là dự toán các chi phí được chủ đầu tư phê duyệt mỗi năm", "Là dự kiến nguồn kinh phí để mua sắm trong phạm vi ngân sách hoặc nguồn hợp pháp", "Là nguồn vốn ngân sách nhà nước được cấp hàng năm"], correct: 2 },
+  { text: "Trách nhiệm của tổ chuyên gia?", options: ["Bảo mật thông tin, tài liệu liên quan", "Lập hồ sơ mời thầu, hồ sơ yêu cầu", "Đánh giá hồ sơ dự thầu, hồ sơ đề xuất", "Tất cả đáp án trên đều đúng"], correct: 3 },
+  { text: "Giá đề nghị trúng thầu là gì?", options: ["Giá dự thầu sau khi sửa lỗi, hiệu chỉnh sai lệch và giảm giá", "Giá của nhà thầu xếp hạng thứ nhất", "Giá ký hợp đồng", "Giá thấp nhất trong các hồ sơ"], correct: 0 },
+  { text: "Phương thức một giai đoạn một túi hồ sơ áp dụng cho hình thức nào?", options: ["Đấu thầu rộng rãi, đấu thầu hạn chế quy mô nhỏ", "Chào hàng cạnh tranh", "Mua sắm trực tiếp, chỉ định thầu", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Hợp đồng trọn gói áp dụng cho gói thầu nào?", options: ["Gói thầu xây lắp quy mô nhỏ", "Gói thầu cung cấp dịch vụ tư vấn đơn giản", "Gói thầu mua sắm hàng hóa thông dụng", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Thời gian chuẩn bị hồ sơ dự thầu tối thiểu đối với đấu thầu trong nước là bao nhiêu ngày?", options: ["10 ngày", "15 ngày", "20 ngày", "30 ngày"], correct: 1 },
+  { text: "Thời gian đánh giá hồ sơ dự thầu tối đa là bao nhiêu ngày?", options: ["25 ngày", "30 ngày", "45 ngày", "60 ngày"], correct: 2 },
+  { text: "Bảo đảm dự thầu không áp dụng cho hình thức nào?", options: ["Đấu thầu rộng rãi", "Đấu thầu hạn chế", "Chỉ định thầu", "Chào hàng cạnh tranh"], correct: 2 },
+  { text: "Giá trị bảo đảm dự thầu trong khoảng nào?", options: ["1% đến 1.5% giá gói thầu", "1% đến 3% giá gói thầu", "2% đến 5% giá gói thầu", "3% đến 10% giá gói thầu"], correct: 1 },
+  { text: "Trường hợp nào nhà thầu không được hoàn trả bảo đảm dự thầu?", options: ["Rút hồ sơ dự thầu sau thời điểm đóng thầu", "Vi phạm pháp luật về đấu thầu dẫn đến bị hủy thầu", "Không tiến hành đối chiếu tài liệu hoặc không ký hợp đồng", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Ưu đãi trong lựa chọn nhà thầu áp dụng cho đối tượng nào?", options: ["Hàng hóa có xuất xứ Việt Nam", "Nhà thầu là doanh nghiệp siêu nhỏ, doanh nghiệp nhỏ", "Nhà thầu có sử dụng nhiều lao động là nữ hoặc người khuyết tật", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Quy trình lựa chọn nhà thầu gồm mấy bước cơ bản?", options: ["4 bước", "5 bước", "6 bước", "7 bước"], correct: 2 },
+  { text: "Hồ sơ mời thầu được phát hành khi nào?", options: ["Sau khi phê duyệt kế hoạch lựa chọn nhà thầu", "Sau khi thông báo mời thầu", "Ngay sau khi có quyết định đầu tư", "Tất cả đều sai"], correct: 1 },
+  { text: "Bên mời thầu là đơn vị nào?", options: ["Chủ đầu tư", "Tổ chức chuyên môn được chủ đầu tư thuê", "Cơ quan phê duyệt dự án", "Cả A và B đều đúng"], correct: 3 },
+  { text: "Tiêu chuẩn đánh giá hồ sơ dự thầu bao gồm?", options: ["Đánh giá về năng lực, kinh nghiệm", "Đánh giá về kỹ thuật", "Đánh giá về giá hoặc tổng hợp", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Hình thức Chào hàng cạnh tranh áp dụng cho gói thầu có giá trị bao nhiêu?", options: ["Dưới 1 tỷ đồng", "Dưới 5 tỷ đồng", "Dưới 10 tỷ đồng", "Không quy định giá trị"], correct: 1 },
+  { text: "Mua sắm trực tiếp được áp dụng khi nào?", options: ["Nhà thầu đã trúng thầu trước đó trong vòng 12 tháng", "Gói thầu có nội dung tương tự", "Giá gói thầu không quá giá trong hợp đồng đã ký", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Chỉ định thầu được áp dụng trong trường hợp khẩn cấp nào?", options: ["Thiên tai, dịch bệnh", "Sự cố cần khắc phục ngay", "Gói thầu bí mật nhà nước", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Hình thức tự thực hiện áp dụng khi nào?", options: ["Chủ đầu tư có đủ năng lực thực hiện", "Gói thầu thuộc dự án do mình quản lý", "Đảm bảo hiệu quả hơn thuê nhà thầu ngoài", "Tất cả các đáp án trên"], correct: 3 },
+  { text: "Chủ đầu tư là?", options: ["Cơ quan, tổ chức sở hữu hoặc quản lý vốn để thực hiện dự án", "Cơ quan phê duyệt kế hoạch lựa chọn nhà thầu", "Cơ quan đình chỉ cuộc thầu", "Đơn vị quyết định đầu tư"], correct: 0 },
+  { text: "Hoạt động lựa chọn nhà thầu nào không bắt buộc áp dụng Luật Đấu thầu?", options: ["Gói thầu xây trụ sở DN nhà nước không dùng ngân sách", "Gói thầu dịch vụ công dùng ngân sách", "Gói thầu mua sắm dùng ngân sách", "Gói thầu dùng nguồn thu hợp pháp của đơn vị sự nghiệp tự bảo đảm một phần chi thường xuyên"], correct: 3 },
+  { text: "Nhà thầu phụ là gì?", options: ["Nhà thầu liên danh", "Tổ chức ký hợp đồng với nhà thầu chính để thực hiện một phần công việc", "Nhà thầu cung cấp vật tư", "Nhà thầu thực hiện trên 50% gói thầu"], correct: 1 },
+  { text: "Dự án đầu tư bao gồm nội dung nào sau đây?", options: ["Chương trình theo quy định", "Nhiệm vụ quy hoạch", "Dự án theo quy định", "Tất cả các phương án trên"], correct: 3 }
+];
 
-// --- THEME MANAGEMENT ---
+let userAnswers = new Array(questions.length).fill(null);
+let currentQ = 0;
+let timer;
+let timeLeft = 90 * 60;
+
 function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const target = current === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', target);
-  document.getElementById('theme-btn').innerText = target === 'light' ? '☀️ Chế độ sáng' : '🌙 Chế độ tối';
-  localStorage.setItem('quiz-theme', target);
-}
-function initTheme() {
-  const saved = localStorage.getItem('quiz-theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-  document.documentElement.setAttribute('data-theme', saved);
-  document.getElementById('theme-btn').innerText = saved === 'light' ? '☀️ Chế độ sáng' : '🌙 Chế độ tối';
-}
-window.addEventListener('DOMContentLoaded', initTheme);
-
-// --- SHARE LOGIC ---
-function shareQuiz() {
-  if (!questions.length) return alert('Hãy thêm câu hỏi!');
-  const data = { n: document.getElementById('quiz-name').value, t: document.getElementById('time-select').value, p: document.getElementById('points-select').value, s: document.getElementById('shuffle-select').value, q: questions };
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-  const url = window.location.origin + window.location.pathname + '?quiz=' + encoded;
-  navigator.clipboard.writeText(url).then(() => alert('Đã copy link bài thi!'));
+  const t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-btn').innerText = t === 'light' ? '🌙 Chế độ tối' : '☀️ Chế độ sáng';
 }
 
-function checkShared() {
-  const data = new URLSearchParams(window.location.search).get('quiz');
-  if (data) {
-    try {
-      const d = JSON.parse(decodeURIComponent(escape(atob(data))));
-      questions = d.q; 
-      document.getElementById('quiz-name').value = d.n;
-      document.getElementById('time-select').value = d.t;
-      document.getElementById('points-select').value = d.p;
-      document.getElementById('shuffle-select').value = d.s;
-      renderQList(); setTimeout(startQuiz, 500);
-    } catch(e) {}
-  }
-}
-window.addEventListener('DOMContentLoaded', checkShared);
-
-// --- CORE LOGIC ---
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function switchTab(id){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab')[id==='tab-create'?0:1].classList.add('active')}
-function updateBadge(){document.getElementById('q-count-badge').textContent=questions.length+' câu'}
-function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
-function addQuestion(){
-  questions.push({id:Date.now(),text:'',options:['','','',''],correct:0});
-  renderQList();
-}
-function removeQuestion(id){ if(confirm('Xóa?')){questions=questions.filter(q=>q.id!==id);renderQList();} }
-
-function renderQList(){
-  updateBadge();
-  const list=document.getElementById('q-list');
-  if(!questions.length){list.innerHTML='<div class="muted" style="text-align:center;padding:2rem">Chưa có câu hỏi</div>';return}
-  list.innerHTML=questions.map((q,qi)=>`
-    <div class="q-card" id="qcard-${q.id}">
-      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span class="label">Câu ${qi+1}</span><button class="btn btn-sm btn-danger" onclick="removeQuestion(${q.id})">Xóa</button></div>
-      <input class="input" placeholder="Câu hỏi..." value="${esc(q.text)}" oninput="updateQ(${q.id},'text',this.value)"/>
-      ${q.options.map((opt,oi)=>`<div class="opt-row"><div class="opt-letter ${q.correct===oi?'correct':''}" onclick="setCorrect(${q.id},${oi})">${LETTERS[oi]}</div><input class="opt-input" value="${esc(opt)}" oninput="updateOption(${q.id},${oi},this.value)"/></div>`).join('')}
-    </div>`).join('');
+function startQuiz() {
+  showScreen('screen-quiz');
+  renderQuestion();
+  timer = setInterval(() => {
+    timeLeft--;
+    let m = Math.floor(timeLeft/60), s = timeLeft%60;
+    document.getElementById('timer-text').innerText = `${m}:${s<10?'0':''}${s}`;
+    if(timeLeft <= 0) submitQuiz();
+  }, 1000);
 }
 
-function updateQ(id,f,v){const q=questions.find(q=>q.id===id);if(q)q[f]=v}
-function updateOption(id,i,v){const q=questions.find(q=>q.id===id);if(q)q.options[i]=v}
-function setCorrect(id,idx){
-  const q=questions.find(q=>q.id===id);if(q)q.correct=idx;
-  document.querySelectorAll(`#qcard-${id} .opt-letter`).forEach((el,i)=>el.classList.toggle('correct',i===idx));
-}
-
-function startQuiz(){
-  if(!questions.length) return;
-  quizQuestions=[...questions];
-  if(document.getElementById('shuffle-select').value==='yes')quizQuestions.sort(()=>Math.random()-0.5);
-  userAnswers=new Array(quizQuestions.length).fill(null);
-  currentQ=0; startTime=Date.now();
-  const mins=parseInt(document.getElementById('time-select').value);
-  if(mins>0){
-    timeLeft=mins*60; document.getElementById('timer-wrap').style.display='block';
-    updateTimer(); timerInterval=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0)submitQuiz();},1000);
-  } else document.getElementById('timer-wrap').style.display='none';
-  renderQuestion(); showScreen('screen-quiz');
-}
-
-function updateTimer(){
-  const m=Math.floor(timeLeft/60),s=timeLeft%60;
-  document.getElementById('timer-text').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-function renderQuestion(){
-  const q=quizQuestions[currentQ],total=quizQuestions.length;
-  document.getElementById('q-title').textContent=document.getElementById('quiz-name').value;
-  document.getElementById('q-meta').textContent=`Câu ${currentQ+1} / ${total}`;
-  document.getElementById('q-text').textContent=q.text;
-  document.getElementById('prog-fill').style.width=`${((currentQ+1)/total)*100}%`;
-  const wrap=document.getElementById('options-wrap'); wrap.innerHTML='';
-  q.options.forEach((opt,i)=>{
-    const div=document.createElement('div'); div.className='opt-btn'+(userAnswers[currentQ]===i?' selected':'');
-    div.innerHTML=`<div class="opt-circle">${LETTERS[i]}</div><div style="font-size:14px">${opt}</div>`;
-    div.onclick=()=>selectAns(i); wrap.appendChild(div);
-  });
-  renderNavDots();
-}
-
-function renderNavDots(){
-  const c=document.getElementById('nav-dots'); c.innerHTML='';
-  quizQuestions.forEach((_,i)=>{
-    const d=document.createElement('div'); d.className='nav-dot'+(i===currentQ?' current':'')+(userAnswers[i]!==null?' answered':'');
-    d.textContent=i+1; d.onclick=()=>{currentQ=i;renderQuestion()}; c.appendChild(d);
-  });
-}
-
-function selectAns(i){userAnswers[currentQ]=i; renderQuestion()}
-function navigate(dir){const n=currentQ+dir; if(n>=0&&n<quizQuestions.length){currentQ=n;renderQuestion()}}
-function confirmExit(){if(confirm('Thoát?')) {clearInterval(timerInterval); showScreen('screen-home');}}
-
-function submitQuiz(){
-  clearInterval(timerInterval);
-  let correct=0;
-  quizQuestions.forEach((q,i)=>{if(userAnswers[i]===q.correct)correct++;});
-  const pct=Math.round((correct/quizQuestions.length)*100);
-  const elapsed=Math.round((Date.now()-startTime)/1000);
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('q-meta').innerText = `Câu hỏi ${currentQ + 1} / ${questions.length}`;
+  document.getElementById('q-text').innerText = q.text;
+  document.getElementById('prog-fill').style.width = `${((currentQ+1)/questions.length)*100}%`;
   
-  document.getElementById('res-pct').textContent=pct+'%';
-  document.getElementById('res-correct').textContent=correct;
-  document.getElementById('res-wrong').textContent=quizQuestions.length-correct;
-  document.getElementById('res-time').textContent=`${Math.floor(elapsed/60)}:${String(elapsed%60).padStart(2,'0')}`;
-  document.getElementById('res-ring').style.setProperty('--pct',`${pct}%`);
+  const wrap = document.getElementById('options-wrap');
+  wrap.innerHTML = q.options.map((opt, i) => `
+    <div class="opt-btn ${userAnswers[currentQ] === i ? 'selected' : ''}" onclick="selectAns(${i})">
+      <div class="opt-circle">${LETTERS[i]}</div>
+      <div style="font-size:14.5px">${opt}</div>
+    </div>
+  `).join('');
+  renderNav();
+}
+
+function selectAns(i) { userAnswers[currentQ] = i; renderQuestion(); }
+function navigate(d) { currentQ = Math.max(0, Math.min(questions.length-1, currentQ + d)); renderQuestion(); }
+
+function renderNav() {
+  document.getElementById('nav-dots').innerHTML = questions.map((_, i) => `
+    <div class="nav-dot ${i===currentQ?'current':''} ${userAnswers[i]!==null?'answered':''}" onclick="currentQ=${i};renderQuestion()">${i+1}</div>
+  `).join('');
+}
+
+function submitQuiz() {
+  if(!confirm("Bạn có chắc chắn muốn nộp bài?")) return;
+  clearInterval(timer);
+  let correct = 0;
+  questions.forEach((q, i) => { if(userAnswers[i] === q.correct) correct++; });
   
-  // RENDER REVIEW
-  const rev=document.getElementById('review-wrap'); rev.innerHTML='';
-  quizQuestions.forEach((q,i)=>{
-    const isOk = userAnswers[i]===q.correct;
-    const item=document.createElement('div'); item.className='review-item';
-    item.innerHTML=`
-      <div style="font-weight:600; margin-bottom:8px;">${i+1}. ${q.text}</div>
-      <div style="font-size:13px;">
-        <span class="dot" style="background:${isOk?'var(--green)':'var(--red)'}"></span>
-        Bạn chọn: <b>${userAnswers[i]!==null?LETTERS[userAnswers[i]] : 'Bỏ trống'}</b>
-        ${!isOk ? `<br><span class="dot" style="background:var(--green)"></span> Đáp án đúng: <b>${LETTERS[q.correct]}</b>` : ''}
+  const pct = Math.round((correct/questions.length)*100);
+  document.getElementById('res-pct').innerText = pct + '%';
+  document.getElementById('res-correct').innerText = correct;
+  document.getElementById('res-wrong').innerText = questions.length - correct;
+  
+  document.getElementById('review-wrap').innerHTML = questions.map((q, i) => {
+    const isCorrect = userAnswers[i] === q.correct;
+    return `
+      <div class="review-item" style="border-left-color: ${isCorrect?'var(--green)':'var(--red)'}">
+        <div style="font-weight:600; font-size:14px; margin-bottom:8px">${i+1}. ${q.text}</div>
+        <div style="font-size:13px">
+          <div style="color:var(--text2)">Bạn chọn: <span style="color:${isCorrect?'var(--green)':'var(--red)'}">${userAnswers[i]!==null ? LETTERS[userAnswers[i]] + '. ' + q.options[userAnswers[i]] : 'Chưa trả lời'}</span></div>
+          ${!isCorrect ? `<div style="color:var(--green); margin-top:4px">Đáp án đúng: ${LETTERS[q.correct]}. ${q.options[q.correct]}</div>` : ''}
+        </div>
       </div>
     `;
-    rev.appendChild(item);
-  });
+  }).join('');
   showScreen('screen-result');
 }
 
-function retake(){ startQuiz(); }
-renderQList();
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 </script>
 </body>
 </html>
